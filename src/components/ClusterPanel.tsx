@@ -20,8 +20,8 @@ const generateClusters = (count: number) =>
     };
   });
 
-export default function ClusterPanel() {
-  const [clusters] = useState(() => generateClusters(30));
+export default function ClusterPanel({ mini = false, count = 30 }) {
+  const [clusters] = useState(() => generateClusters(count));
   const [colorFilter, setColorFilter] = useState("All");
   const [typeFilter, setTypeFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -35,60 +35,64 @@ export default function ClusterPanel() {
 
   return (
     <div
-      className="relative w-full h-screen overflow-hidden"
+      className={`relative overflow-hidden ${
+        mini ? "w-full h-full rounded-lg" : "w-full h-screen"
+      }`}
       style={{
         backgroundImage:
           "linear-gradient(to right, #e5e7eb 1px, transparent 1px), linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)",
         backgroundSize: "40px 40px",
       }}
     >
-      {/* Floating Movable Panel */}
-      <motion.div
-        drag
-        dragConstraints={{ top: 0, left: 0, right: 1000, bottom: 800 }}
-        dragElastic={0.2}
-        className="absolute top-6 left-6 bg-white shadow-xl p-5 rounded-xl border border-gray-200 w-72 z-50 cursor-move"
-      >
-        <h3 className="text-xl font-semibold mb-2">Marker Clustering</h3>
-        <p className="text-sm text-gray-600 mb-3 leading-tight">
-          This panel simulates clustered data points dynamically placed on a grid layout.
-        </p>
+      {/* Floating panel */}
+      {!mini && (
+        <motion.div
+          drag
+          dragConstraints={{ top: 0, left: 0, right: 1000, bottom: 800 }}
+          dragElastic={0.2}
+          className="absolute top-6 left-6 bg-white shadow-xl p-5 rounded-xl border border-gray-200 w-72 z-50 cursor-move"
+        >
+          <h3 className="text-xl font-semibold mb-2">Marker Clustering</h3>
+          <p className="text-sm text-gray-600 mb-3 leading-tight">
+            This panel simulates clustered data points dynamically placed on a grid layout.
+          </p>
 
-        <div className="space-y-2">
-          <select
-            value={colorFilter}
-            onChange={(e) => setColorFilter(e.target.value)}
-            className="w-full p-2 border rounded-md text-sm bg-white"
-          >
-            <option>All</option>
-            <option>Red</option>
-            <option>Blue</option>
-          </select>
+          <div className="space-y-2">
+            <select
+              value={colorFilter}
+              onChange={(e) => setColorFilter(e.target.value)}
+              className="w-full p-2 border rounded-md text-sm bg-white"
+            >
+              <option>All</option>
+              <option>Red</option>
+              <option>Blue</option>
+            </select>
 
-          <select
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
-            className="w-full p-2 border rounded-md text-sm bg-white"
-          >
-            <option>All</option>
-            <option>A</option>
-            <option>B</option>
-            <option>C</option>
-          </select>
+            <select
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value)}
+              className="w-full p-2 border rounded-md text-sm bg-white"
+            >
+              <option>All</option>
+              <option>A</option>
+              <option>B</option>
+              <option>C</option>
+            </select>
 
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full p-2 border rounded-md text-sm bg-white"
-          >
-            <option>All</option>
-            <option>active</option>
-            <option>inactive</option>
-          </select>
-        </div>
-      </motion.div>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="w-full p-2 border rounded-md text-sm bg-white"
+            >
+              <option>All</option>
+              <option>active</option>
+              <option>inactive</option>
+            </select>
+          </div>
+        </motion.div>
+      )}
 
-      {/* Cluster Markers */}
+      {/* Cluster markers */}
       <AnimatePresence>
         {filteredClusters.map((cluster) => {
           const isBlue = cluster.color === "blue";
@@ -113,7 +117,7 @@ export default function ClusterPanel() {
                 transform: "translate(-50%, -50%)",
               }}
             >
-              {/* Animated Halos */}
+              {/* Animated halos */}
               <div className="absolute w-full h-full flex items-center justify-center z-0 pointer-events-none">
                 {[ring3, ring2, ring1].map((ring, idx) => (
                   <motion.div
@@ -136,7 +140,7 @@ export default function ClusterPanel() {
                 ))}
               </div>
 
-              {/* Main Cluster */}
+              {/* Main cluster */}
               <div
                 className="relative z-10 flex items-center justify-center text-white text-sm font-bold w-10 h-10 rounded-full shadow-lg"
                 style={{
