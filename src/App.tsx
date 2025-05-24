@@ -1,6 +1,6 @@
 // App.tsx
 import { useState } from "react";
-import ClusterPanel from "./components/ClusterPanel";
+import ClusterPanel from "./components/Charts/ClusterPanel";
 import HomePanel from "./components/HomePanel";
 import RevenueProjection from "./components/RevenueProjection";
 import { FaHome, FaProjectDiagram, FaChartLine } from "react-icons/fa";

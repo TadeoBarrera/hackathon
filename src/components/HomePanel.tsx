@@ -11,7 +11,7 @@ import {
   YAxis,
   CartesianGrid,
 } from "recharts";
-import ClusterPanel from "./ClusterPanel";
+import ClusterPanel from "./Charts/ClusterPanel";
 
 const pieData = [
   { name: "Aceptadas", value: 400 },
