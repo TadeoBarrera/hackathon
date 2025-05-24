@@ -1,22 +1,36 @@
 import { useState } from "react";
-import clsx from "clsx";
+import { motion, AnimatePresence } from "framer-motion";
 
 const generateClusters = (count: number) =>
-  Array.from({ length: count }, (_, i) => ({
-    id: i + 1,
-    value: Math.floor(Math.random() * 50) + 1,
-    color: Math.random() > 0.5 ? "red" : "blue",
-    top: `${Math.random() * 85 + 5}%`,
-    left: `${Math.random() * 85 + 5}%`,
-  }));
+  Array.from({ length: count }, (_, i) => {
+    const value = Math.floor(Math.random() * 50) + 1;
+    const types = ["A", "B", "C"];
+    const statuses = ["active", "inactive"];
+    const size = value > 40 ? "large" : value > 20 ? "medium" : "small";
+
+    return {
+      id: i + 1,
+      value,
+      color: Math.random() > 0.5 ? "red" : "blue",
+      top: `${Math.random() * 85 + 5}%`,
+      left: `${Math.random() * 85 + 5}%`,
+      type: types[Math.floor(Math.random() * types.length)],
+      status: statuses[Math.floor(Math.random() * statuses.length)],
+      size,
+    };
+  });
 
 export default function ClusterPanel() {
-  const [clusters, setClusters] = useState(() => generateClusters(30));
-  const [filter, setFilter] = useState("All");
+  const [clusters] = useState(() => generateClusters(30));
+  const [colorFilter, setColorFilter] = useState("All");
+  const [typeFilter, setTypeFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState("All");
 
   const filteredClusters = clusters.filter((c) => {
-    if (filter === "All") return true;
-    return c.color === filter.toLowerCase();
+    const colorMatch = colorFilter === "All" || c.color === colorFilter.toLowerCase();
+    const typeMatch = typeFilter === "All" || c.type === typeFilter;
+    const statusMatch = statusFilter === "All" || c.status === statusFilter;
+    return colorMatch && typeMatch && statusMatch;
   });
 
   return (
@@ -28,87 +42,114 @@ export default function ClusterPanel() {
         backgroundSize: "40px 40px",
       }}
     >
-      {/* Floating panel */}
-      <div className="absolute right-6 top-6 bg-white shadow-xl p-5 rounded-xl border border-gray-200 w-72 z-10">
+      {/* Floating Movable Panel */}
+      <motion.div
+        drag
+        dragConstraints={{ top: 0, left: 0, right: 1000, bottom: 800 }}
+        dragElastic={0.2}
+        className="absolute top-6 left-6 bg-white shadow-xl p-5 rounded-xl border border-gray-200 w-72 z-50 cursor-move"
+      >
         <h3 className="text-xl font-semibold mb-2">Marker Clustering</h3>
         <p className="text-sm text-gray-600 mb-3 leading-tight">
           This panel simulates clustered data points dynamically placed on a grid layout.
         </p>
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="w-full p-2 border rounded-md text-sm bg-white"
-        >
-          <option>All</option>
-          <option>Red</option>
-          <option>Blue</option>
-        </select>
-      </div>
 
-      {/* Cluster markers */}
-      {filteredClusters.map((cluster) => {
-        const isBlue = cluster.color === "blue";
-        const baseColor = isBlue ? "#1d4ed8" : "#dc2626";
-        const ring1 = isBlue ? "#3b82f6" : "#f87171";
-        const ring2 = isBlue ? "#93c5fd" : "#fca5a5";
-        const ring3 = isBlue ? "#dbeafe" : "#fecaca";
-
-        return (
-          <div
-            key={cluster.id}
-            className="absolute flex items-center justify-center"
-            style={{
-              top: cluster.top,
-              left: cluster.left,
-              width: "60px",
-              height: "60px",
-              transform: "translate(-50%, -50%)",
-            }}
+        <div className="space-y-2">
+          <select
+            value={colorFilter}
+            onChange={(e) => setColorFilter(e.target.value)}
+            className="w-full p-2 border rounded-md text-sm bg-white"
           >
-            {/* Outer Rings */}
-            <div className="absolute w-full h-full flex items-center justify-center z-0 pointer-events-none">
-              <div
-                className="absolute rounded-full"
-                style={{
-                  width: "60px",
-                  height: "60px",
-                  backgroundColor: ring3,
-                  opacity: 0.4,
-                }}
-              />
-              <div
-                className="absolute rounded-full"
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  backgroundColor: ring2,
-                  opacity: 0.5,
-                }}
-              />
-              <div
-                className="absolute rounded-full"
-                style={{
-                  width: "24px",
-                  height: "24px",
-                  backgroundColor: ring1,
-                  opacity: 0.6,
-                }}
-              />
-            </div>
+            <option>All</option>
+            <option>Red</option>
+            <option>Blue</option>
+          </select>
 
-            {/* Main Cluster */}
-            <div
-              className="relative z-10 flex items-center justify-center text-white text-sm font-bold w-10 h-10 rounded-full shadow-lg"
+          <select
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+            className="w-full p-2 border rounded-md text-sm bg-white"
+          >
+            <option>All</option>
+            <option>A</option>
+            <option>B</option>
+            <option>C</option>
+          </select>
+
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="w-full p-2 border rounded-md text-sm bg-white"
+          >
+            <option>All</option>
+            <option>active</option>
+            <option>inactive</option>
+          </select>
+        </div>
+      </motion.div>
+
+      {/* Cluster Markers */}
+      <AnimatePresence>
+        {filteredClusters.map((cluster) => {
+          const isBlue = cluster.color === "blue";
+          const baseColor = isBlue ? "#1d4ed8" : "#dc2626";
+          const ring1 = isBlue ? "#3b82f6" : "#f87171";
+          const ring2 = isBlue ? "#93c5fd" : "#fca5a5";
+          const ring3 = isBlue ? "#dbeafe" : "#fecaca";
+
+          return (
+            <motion.div
+              key={cluster.id}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              transition={{ duration: 0.4 }}
+              className="absolute flex items-center justify-center"
               style={{
-                backgroundColor: baseColor,
-                border: `2px solid ${ring2}`,
+                top: cluster.top,
+                left: cluster.left,
+                width: "60px",
+                height: "60px",
+                transform: "translate(-50%, -50%)",
               }}
             >
-              {cluster.value}
-            </div>
-          </div>
-        );
-      })}
+              {/* Animated Halos */}
+              <div className="absolute w-full h-full flex items-center justify-center z-0 pointer-events-none">
+                {[ring3, ring2, ring1].map((ring, idx) => (
+                  <motion.div
+                    key={idx}
+                    className="absolute rounded-full"
+                    style={{
+                      width: `${60 - idx * 20}px`,
+                      height: `${60 - idx * 20}px`,
+                      backgroundColor: ring,
+                      opacity: 0.4 + idx * 0.1,
+                    }}
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      delay: idx * 0.3,
+                      ease: "easeInOut",
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* Main Cluster */}
+              <div
+                className="relative z-10 flex items-center justify-center text-white text-sm font-bold w-10 h-10 rounded-full shadow-lg"
+                style={{
+                  backgroundColor: baseColor,
+                  border: `2px solid ${ring2}`,
+                }}
+              >
+                {cluster.value}
+              </div>
+            </motion.div>
+          );
+        })}
+      </AnimatePresence>
     </div>
   );
 }
