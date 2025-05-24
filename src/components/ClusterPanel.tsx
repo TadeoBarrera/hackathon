@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import clsx from "clsx";
 
 const generateClusters = (count: number) =>
@@ -56,11 +56,17 @@ export default function ClusterPanel() {
         return (
           <div
             key={cluster.id}
-            className="absolute"
-            style={{ top: cluster.top, left: cluster.left }}
+            className="absolute flex items-center justify-center"
+            style={{
+              top: cluster.top,
+              left: cluster.left,
+              width: "60px",
+              height: "60px",
+              transform: "translate(-50%, -50%)",
+            }}
           >
             {/* Outer Rings */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0">
+            <div className="absolute w-full h-full flex items-center justify-center z-0 pointer-events-none">
               <div
                 className="absolute rounded-full"
                 style={{
@@ -77,8 +83,6 @@ export default function ClusterPanel() {
                   height: "40px",
                   backgroundColor: ring2,
                   opacity: 0.5,
-                  top: "10px",
-                  left: "10px",
                 }}
               />
               <div
@@ -88,8 +92,6 @@ export default function ClusterPanel() {
                   height: "24px",
                   backgroundColor: ring1,
                   opacity: 0.6,
-                  top: "18px",
-                  left: "18px",
                 }}
               />
             </div>
