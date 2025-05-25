@@ -1,128 +1,96 @@
-import React from "react";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-} from "recharts";
-import ClusterPanel from "./Charts/ClusterPanel";
+import React, { useState } from "react";
+import { Maximize2, Minimize2 } from "lucide-react";
+import Propuesta from "./charts/Propuesta";
+import ClusterPanel from "./charts/ClusterPanel";
+import Beneficios from "./charts/Beneficios";
+import Inversion from "./charts/Inversion";
+import OptimoVsReal from "./charts/OptimoVsReal";
 
-const pieData = [
-  { name: "Aceptadas", value: 400 },
-  { name: "Rechazadas", value: 100 },
-  { name: "Pendientes", value: 300 },
+const availableModules = [
+  { id: "optimo", label: "Óptimo vs Real", component: <OptimoVsReal mini /> },
+  { id: "propuesta", label: "Propuesta", component: <Propuesta mini /> },
+  { id: "cluster", label: "Cluster", component: <ClusterPanel mini count={16} /> },
+  { id: "beneficios", label: "Beneficios", component: <Beneficios mini /> },
+  { id: "inversion", label: "Inversión", component: <Inversion mini /> },
 ];
 
-const benefitData = [
-  { mes: "Ene", beneficios: 12000 },
-  { mes: "Feb", beneficios: 14500 },
-  { mes: "Mar", beneficios: 9800 },
-  { mes: "Abr", beneficios: 16300 },
-  { mes: "May", beneficios: 13400 },
-];
+export default function HomePanel() {
+  const [editMode, setEditMode] = useState(false);
+  const [activeModules, setActiveModules] = useState<string[]>([
+    "optimo",
+    "propuesta",
+    "cluster",
+    "beneficios",
+    "inversion",
+  ]);
 
-const investmentData = [
-  { nombre: "Marketing", monto: "$5,000", fecha: "2024-03-15" },
-  { nombre: "Tecnología", monto: "$8,500", fecha: "2024-03-20" },
-  { nombre: "Talento", monto: "$4,200", fecha: "2024-03-25" },
-];
+  const [wideModules, setWideModules] = useState<string[]>([]);
 
-const COLORS = ["#22c55e", "#ef4444", "#facc15"];
+  const toggleModule = (id: string) => {
+    setActiveModules((prev) =>
+      prev.includes(id) ? prev.filter((mod) => mod !== id) : [...prev, id]
+    );
+  };
 
-const HomePanel = () => {
+  const toggleWide = (id: string) => {
+    setWideModules((prev) =>
+      prev.includes(id) ? prev.filter((mod) => mod !== id) : [...prev, id]
+    );
+  };
+
   return (
-    <div className="h-screen w-full p-4 pr-6 overflow-hidden grid grid-cols-2 grid-rows-2 gap-4 text-sm bg-gray-50">
-      {/* Propuesta */}
-      <div className="bg-white rounded-xl shadow p-3 flex flex-col">
-        <h2 className="text-sm font-semibold text-gray-700 mb-2">Propuesta</h2>
-        <div className="flex-1">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={pieData}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={50}
-                label
-              >
-                {pieData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
+    <div className="w-full p-4 pr-6 bg-gray-50 text-sm">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-xl font-semibold text-gray-800">Resumen General</h1>
+        <button
+          onClick={() => setEditMode(!editMode)}
+          className="text-xs bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+        >
+          {editMode ? "Finalizar edición" : "Editar tablero"}
+        </button>
       </div>
 
-      {/* Cluster */}
-      <div className="bg-white rounded-xl shadow p-3 flex flex-col">
-        <div className="flex justify-between items-center mb-2">
-          <h2 className="text-sm font-semibold text-gray-700">Cluster</h2>
-          <a
-            href="/cluster-view"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-blue-600 hover:underline"
-          >
-            Ver más
-          </a>
+      {editMode && (
+        <div className="mb-4 p-4 bg-white rounded-xl shadow border">
+          <h2 className="text-sm font-semibold mb-2">Selecciona los módulos a mostrar</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
+            {availableModules.map((mod) => (
+              <label key={mod.id} className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={activeModules.includes(mod.id)}
+                  onChange={() => toggleModule(mod.id)}
+                />
+                <span>{mod.label}</span>
+              </label>
+            ))}
+          </div>
         </div>
-        <div className="flex-1 rounded-lg overflow-hidden border">
-          <ClusterPanel mini count={16} />
-        </div>
-      </div>
+      )}
 
-      {/* Beneficios */}
-      <div className="bg-white rounded-xl shadow p-3 flex flex-col">
-        <h2 className="text-sm font-semibold text-gray-700 mb-2">Beneficios</h2>
-        <div className="flex-1">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={benefitData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="mes" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="beneficios" fill="#10b981" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Inversión */}
-      <div className="bg-white rounded-xl shadow p-3 flex flex-col">
-        <h2 className="text-sm font-semibold text-gray-700 mb-2">Inversión</h2>
-        <div className="flex-1 overflow-hidden">
-          <table className="w-full text-left text-xs text-gray-700">
-            <thead>
-              <tr className="border-b">
-                <th className="py-1">Área</th>
-                <th className="py-1">Monto</th>
-                <th className="py-1">Fecha</th>
-              </tr>
-            </thead>
-            <tbody>
-              {investmentData.map((item, index) => (
-                <tr key={index} className="border-b">
-                  <td className="py-1">{item.nombre}</td>
-                  <td className="py-1">{item.monto}</td>
-                  <td className="py-1">{item.fecha}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {availableModules
+          .filter((mod) => activeModules.includes(mod.id))
+          .map((mod) => (
+            <div
+              key={mod.id}
+              className={`bg-white rounded-xl shadow p-3 h-[220px] relative ${
+                wideModules.includes(mod.id) ? "col-span-full md:col-span-2 w-full" : ""
+              }`}
+            >
+              <div className="flex justify-between items-start mb-2">
+                <h2 className="text-sm font-semibold text-gray-700">{mod.label}</h2>
+                <button
+                  onClick={() => toggleWide(mod.id)}
+                  className="z-20 p-1 rounded-full hover:bg-gray-100"
+                >
+                  {wideModules.includes(mod.id) ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+                </button>
+              </div>
+              {mod.component}
+            </div>
+          ))}
       </div>
     </div>
   );
-};
-
-export default HomePanel;
+}

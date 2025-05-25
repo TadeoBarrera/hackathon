@@ -35,9 +35,7 @@ export default function ClusterPanel({ mini = false, count = 30 }) {
 
   return (
     <div
-      className={`relative overflow-hidden ${
-        mini ? "w-full h-full rounded-lg" : "w-full h-screen"
-      }`}
+      className={`relative overflow-hidden w-full ${mini ? "h-full" : "h-screen"}`}
       style={{
         backgroundImage:
           "linear-gradient(to right, #e5e7eb 1px, transparent 1px), linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)",
