@@ -39,13 +39,9 @@ const clusterBankMap: Record<string, string> = {
   cluster3: "purple",
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
   const [clusters, setClusters] = useState<ClusterPoint[]>([]);
   const [clusterCenters, setClusterCenters] = useState<Record<string, ClusterCenter>>({});
-  const [colorFilter, setColorFilter] = useState("All");
-  const [typeFilter, setTypeFilter] = useState("All");
-  const [statusFilter, setStatusFilter] = useState("All");
   const imageRefs = useRef<Record<string, HTMLImageElement | null>>({});
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -54,7 +50,6 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
     const allX: number[] = [], allY: number[] = [];
     const PADDING = 0.15;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Object.values(clusterData).forEach((cluster: any) => {
       allX.push(...cluster.x);
       allY.push(...cluster.y);
@@ -107,13 +102,6 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
     setClusters(parsed);
     setClusterCenters(centers);
   }, []);
-
-  const filteredClusters = clusters.filter((c) => {
-    const colorMatch = colorFilter === "All" || c.color === colorFilter.toLowerCase();
-    const typeMatch = typeFilter === "All" || c.type === typeFilter;
-    const statusMatch = statusFilter === "All" || c.status === statusFilter;
-    return colorMatch && typeMatch && statusMatch;
-  });
 
   return (
     <div
@@ -169,7 +157,7 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
           return (
             <div
               key={`${clusterName}-${logoName}`}
-              className="absolute"
+              className="absolute group"
               style={{
                 top: `${center.topPercent}%`,
                 left: `${center.leftPercent}%`,
@@ -177,98 +165,86 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
                 height: `${thickness}px`,
                 transform: `rotate(${angle}deg)`,
                 transformOrigin: "left center",
-                backgroundImage: `repeating-linear-gradient(to right, ${color}, ${color} 5px, transparent 5px, transparent 10px)`,
-                backgroundSize: "200% 100%",
-                animation: `dash ${animationDuration}s linear infinite`,
               }}
-            />
+            >
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundImage: `repeating-linear-gradient(to right, ${color}, ${color} 5px, transparent 5px, transparent 10px)`,
+                  backgroundSize: "200% 100%",
+                  animation: `dash ${animationDuration}s linear infinite`,
+                }}
+              />
+              <div
+                className="absolute opacity-0 group-hover:opacity-100 transition-opacity z-50 bg-white text-black text-xs px-3 py-1 rounded shadow border"
+                style={{
+                  top: "-40px",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  whiteSpace: "nowrap",
+                  transformOrigin: "center center",
+                }}
+              >
+                {`Cluster: ${clusterName}`}
+                <br />
+                {`Banco: ${logoName}`}
+                <br />
+                {`Propor: ${(center.propor * 100).toFixed(1)}%`}
+              </div>
+            </div>
           );
         });
       })}
 
       <AnimatePresence>
-        {filteredClusters.map((cluster) => {
-          const baseColor = {
-            red: "#dc2626",
-            blue: "#1d4ed8",
-            green: "#059669",
-            purple: "#7c3aed",
-            gray: "#6b7280",
-          }[cluster.color];
-
-          const ring1 = {
-            red: "#f87171",
-            blue: "#3b82f6",
-            green: "#34d399",
-            purple: "#c084fc",
-            gray: "#d1d5db",
-          }[cluster.color];
-
-          const ring2 = {
-            red: "#fca5a5",
-            blue: "#93c5fd",
-            green: "#6ee7b7",
-            purple: "#d8b4fe",
-            gray: "#e5e7eb",
-          }[cluster.color];
-
-          const ring3 = {
-            red: "#fecaca",
-            blue: "#dbeafe",
-            green: "#bbf7d0",
-            purple: "#ede9fe",
-            gray: "#f3f4f6",
-          }[cluster.color];
-
-          return (
-            <motion.div
-              key={cluster.id}
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.5 }}
-              transition={{ duration: 0.4 }}
-              className="absolute flex items-center justify-center"
+        {clusters.map((cluster) => (
+          <motion.div
+            key={cluster.id}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            transition={{ duration: 0.4 }}
+            className="absolute flex items-center justify-center"
+            style={{
+              top: `calc(${cluster.topPercent}% - 6px)`,
+              left: `calc(${cluster.leftPercent}% - 6px)`,
+              width: "12px",
+              height: "12px",
+            }}
+          >
+            <div className="absolute w-full h-full flex items-center justify-center z-0 pointer-events-none">
+              {["#f3f4f6", "#e5e7eb", "#d1d5db"].map((ring, idx) => (
+                <motion.div
+                  key={idx}
+                  className="absolute rounded-full"
+                  style={{
+                    width: `${12 - idx * 4}px`,
+                    height: `${12 - idx * 4}px`,
+                    backgroundColor: ring,
+                    opacity: 0.4 + idx * 0.1,
+                  }}
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    delay: idx * 0.3,
+                    ease: "easeInOut",
+                  }}
+                />
+              ))}
+            </div>
+            <div
+              className="relative z-10 rounded-full shadow-sm"
               style={{
-                top: `calc(${cluster.topPercent}% - 6px)`,
-                left: `calc(${cluster.leftPercent}% - 6px)`,
-                width: "12px",
-                height: "12px",
+                width: "6px",
+                height: "6px",
+                backgroundColor: cluster.color,
+                border: `1px solid #e5e7eb`,
               }}
-            >
-              <div className="absolute w-full h-full flex items-center justify-center z-0 pointer-events-none">
-                {[ring3, ring2, ring1].map((ring, idx) => (
-                  <motion.div
-                    key={idx}
-                    className="absolute rounded-full"
-                    style={{
-                      width: `${12 - idx * 4}px`,
-                      height: `${12 - idx * 4}px`,
-                      backgroundColor: ring,
-                      opacity: 0.4 + idx * 0.1,
-                    }}
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      delay: idx * 0.3,
-                      ease: "easeInOut",
-                    }}
-                  />
-                ))}
-              </div>
-
-              <div
-                className="relative z-10 rounded-full shadow-sm"
-                style={{
-                  width: "6px",
-                  height: "6px",
-                  backgroundColor: baseColor,
-                  border: `1px solid ${ring2}`,
-                }}
-              />
-            </motion.div>
-          );
-        })}
+            />
+          </motion.div>
+        ))}
       </AnimatePresence>
 
       <style>{`
