@@ -42,7 +42,7 @@ const availableKpis = [
       <>
         <span className="text-sm">
           A partir del intento de cobro <span className="font-semibold text-[#1D99D6]">20</span>, el valor esperado es{" "}
-          <span className="font-semibold text-red-400">negativo</span>.
+<span className="font-semibold text-[#F87171]">negativo</span>
         </span>
       </>
     ),
@@ -52,7 +52,7 @@ const availableKpis = [
     label: "Ganancia Potencial",
     component: (
       <div className="flex flex-col items-center">
-        <span className="text-sm text-gray-300">Ganancia potencial adicional</span>
+<span className="text-sm text-[#D1D5DB]">Ganancia potencial adicional</span>
         <span className="text-2xl font-bold text-[#1D99D6] mt-1">$25,000,000</span>
       </div>
     ),
@@ -100,72 +100,78 @@ export default function HomePanel() {
   const visibleKpis = availableKpis.filter((k) => activeModules.includes(k.id));
   const visibleModules = availableModules.filter((m) => activeModules.includes(m.id));
 
-  const exportDashboardToPDF = async () => {
-    const pdf = new jsPDF("p", "pt", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    let yOffset = 50;
-    let count = 1;
+const exportDashboardToPDF = async () => {
+  const pdf = new jsPDF("p", "pt", "a4");
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  let yOffset = 50;
+  let count = 1;
 
-    pdf.setFont("Helvetica", "bold");
-    pdf.setFontSize(26);
-    pdf.setTextColor("#1D99D6");
-    pdf.text("Reporte de Dashboard", pageWidth / 2, yOffset, { align: "center" });
-    yOffset += 40;
+  pdf.setFont("Helvetica", "bold");
+  pdf.setFontSize(26);
+  pdf.setTextColor("#1D99D6");
+  pdf.text("Reporte de Dashboard", pageWidth / 2, yOffset, { align: "center" });
+  yOffset += 40;
 
-    const descriptions: Record<string, { title: string; text: string }> = {
-      "kpi_negativo": {
-        title: "Indicador: Valor Esperado Negativo",
-        text: "A partir del intento 20, el valor esperado de recuperación se vuelve negativo, indicando que seguir intentando podría generar más costos que beneficios.",
-      },
-      "kpi_ganancia": {
-        title: "Indicador: Ganancia Potencial",
-        text: "Este KPI refleja la diferencia entre la ganancia obtenida actualmente y la ganancia proyectada si se aplicara una estrategia óptima.",
-      },
-      "optimo": {
-        title: "Óptimo vs Real",
-        text: "Comparación entre la ganancia acumulada real y la proyectada si se hubiera aplicado la estrategia óptima desde el inicio.",
-      },
-      "Sustento": {
-        title: "Sustento Científico",
-        text: "Este módulo presenta la precisión, recall y F1-score del modelo de predicción utilizado para determinar la probabilidad de pago de los clientes.",
-      },
-      "cobranza_prob": {
-        title: "Cobranza - Probabilidad",
-        text: "Muestra cómo la probabilidad de que un cliente pague cambia en función del número de intentos de cobranza.",
-      },
-      "cobranza_valor": {
-        title: "Cobranza - Valor Esperado",
-        text: "Indica el valor económico promedio que se puede recuperar en función del número de intentos realizados.",
-      },
-      "matriz": {
-        title: "Matriz de Confusión",
-        text: "Resumen visual de los aciertos y errores del modelo al predecir pagos: verdadero negativo, falso positivo, falso negativo y verdadero positivo.",
-      }
-    };
+  const descriptions: Record<string, { title: string; text: string }> = {
+    "kpi_negativo": {
+      title: "Indicador: Valor Esperado Negativo",
+      text: "A partir del intento 20, el valor esperado de recuperación se vuelve negativo, indicando que seguir intentando podría generar más costos que beneficios.",
+    },
+    "kpi_ganancia": {
+      title: "Indicador: Ganancia Potencial",
+      text: "Este KPI refleja la diferencia entre la ganancia obtenida actualmente y la ganancia proyectada si se aplicara una estrategia óptima.",
+    },
+    "kpi_boton": {
+      title: "Recomendaciones Automatizadas",
+      text: "Este módulo sugiere acciones basadas en el análisis del modelo. Permite ejecutar recomendaciones directamente desde el panel interactivo.",
+    },
+    "optimo": {
+      title: "Óptimo vs Real",
+      text: "Comparación entre la ganancia acumulada real y la proyectada si se hubiera aplicado la estrategia óptima desde el inicio.",
+    },
+    "sustento": {
+      title: "Sustento de Ciencia de Datos",
+      text: "Este módulo documenta las métricas clave del modelo predictivo como precisión, F1-score y exactitud. Sirve como respaldo científico sobre la validez del modelo aplicado.",
+    },
+    "cobranza_prob": {
+      title: "Cobranza - Probabilidad",
+      text: "Muestra cómo la probabilidad de que un cliente pague cambia en función del número de intentos de cobranza.",
+    },
+    "cobranza_valor": {
+      title: "Cobranza - Valor Esperado",
+      text: "Indica el valor económico promedio que se puede recuperar en función del número de intentos realizados.",
+    },
+    "matriz": {
+      title: "Matriz de Confusión",
+      text: "Resumen visual de los aciertos y errores del modelo al predecir pagos: verdadero negativo, falso positivo, falso negativo y verdadero positivo.",
+    },
+  };
 
-    const elements = document.querySelectorAll(".exportable-graph");
+  const elements = document.querySelectorAll(".exportable-graph");
 
-    for (const element of elements) {
-      const elementId = (element as HTMLElement).getAttribute("data-id");
-      if (elementId === "kpi_boton") continue;
+  for (const element of elements) {
+    const elementId = (element as HTMLElement).getAttribute("data-id");
 
-      const desc = descriptions[elementId ?? ""] ?? null;
-      if (desc) {
-        pdf.setFontSize(14);
-        pdf.setTextColor("#000000");
-        pdf.setFont("Helvetica", "bold");
-        pdf.text(`${count}. ${desc.title}`, 40, yOffset);
-        yOffset += 16;
+    // Recuperar descripción
+    const desc = descriptions[elementId ?? ""] ?? null;
+    if (desc) {
+      pdf.setFontSize(14);
+      pdf.setTextColor("#000000");
+      pdf.setFont("Helvetica", "bold");
+      pdf.text(`${count}. ${desc.title}`, 40, yOffset);
+      yOffset += 16;
 
-        pdf.setFont("Helvetica", "normal");
-        pdf.setFontSize(10);
-        const splitText = pdf.splitTextToSize(desc.text, pageWidth - 80);
-        pdf.text(splitText, 40, yOffset);
-        yOffset += splitText.length * 12 + 10;
-        count++;
-      }
+      pdf.setFont("Helvetica", "normal");
+      pdf.setFontSize(10);
+      const splitText = pdf.splitTextToSize(desc.text, pageWidth - 80);
+      pdf.text(splitText, 40, yOffset);
+      yOffset += splitText.length * 12 + 10;
+      count++;
+    }
 
+    // Renderizar imagen solo si NO es el botón (ese no se visualiza bien)
+    if (elementId !== "kpi_boton") {
       const canvas = await html2canvas(element as HTMLElement, {
         scale: 2,
         backgroundColor: "#ffffff",
@@ -185,9 +191,11 @@ export default function HomePanel() {
       pdf.addImage(imgData, "PNG", xCentered, yOffset, maxWidth, scaledHeight);
       yOffset += scaledHeight + 30;
     }
+  }
 
-    pdf.save("dashboard.pdf");
-  };
+  pdf.save("dashboard.pdf");
+};
+
 
   return (
     <div className="w-full p-6 bg-gradient-to-br from-[#15243D] via-[#0E4385] to-[#111827] text-white min-h-screen">
