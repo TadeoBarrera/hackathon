@@ -80,7 +80,7 @@ export default function App() {
               </li>
               <li className={menuItemStyle("optimo")} onClick={() => setSection("optimo")}>
                 <FaCogs className="text-lg" />
-                <span>Óptimo vs Real</span>
+                <span>Óptimo vs Actual</span>
               </li>
             </ul>
           </div>

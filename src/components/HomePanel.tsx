@@ -39,27 +39,28 @@ export default function HomePanel() {
   };
 
   return (
-    <div className="w-full p-4 pr-6 bg-gray-50 text-sm">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-semibold text-gray-800">Resumen General</h1>
+    <div className="w-full p-6 bg-gradient-to-br from-[#15243D] via-[#0E4385] to-[#111827] text-white min-h-screen">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-white">Resumen General</h1>
         <button
           onClick={() => setEditMode(!editMode)}
-          className="text-xs bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+          className="text-xs bg-[#0E4385] hover:bg-[#1D99D6] text-white px-4 py-1 rounded shadow"
         >
           {editMode ? "Finalizar edición" : "Editar tablero"}
         </button>
       </div>
 
       {editMode && (
-        <div className="mb-4 p-4 bg-white rounded-xl shadow border">
-          <h2 className="text-sm font-semibold mb-2">Selecciona los módulos a mostrar</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
+        <div className="mb-6 p-4 bg-[#15243D] rounded-xl shadow border-l-4 border-[#1D99D6]">
+          <h2 className="text-sm font-semibold text-white mb-2">Selecciona los módulos a mostrar</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm text-gray-300">
             {availableModules.map((mod) => (
               <label key={mod.id} className="flex items-center space-x-2">
                 <input
                   type="checkbox"
                   checked={activeModules.includes(mod.id)}
                   onChange={() => toggleModule(mod.id)}
+                  className="accent-[#1D99D6]"
                 />
                 <span>{mod.label}</span>
               </label>
@@ -74,15 +75,15 @@ export default function HomePanel() {
           .map((mod) => (
             <div
               key={mod.id}
-              className={`bg-white rounded-xl shadow p-3 h-[220px] relative ${
+              className={`bg-[#15243D] border border-[#1D99D6] rounded-xl shadow-lg p-4 h-[220px] relative transition-all ${
                 wideModules.includes(mod.id) ? "col-span-full md:col-span-2 w-full" : ""
               }`}
             >
               <div className="flex justify-between items-start mb-2">
-                <h2 className="text-sm font-semibold text-gray-700">{mod.label}</h2>
+                <h2 className="text-sm font-semibold text-white">{mod.label}</h2>
                 <button
                   onClick={() => toggleWide(mod.id)}
-                  className="z-20 p-1 rounded-full hover:bg-gray-100"
+                  className="z-20 p-1 rounded-full hover:bg-[#1D99D6]/20 text-white"
                 >
                   {wideModules.includes(mod.id) ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
                 </button>
