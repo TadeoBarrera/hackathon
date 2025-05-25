@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import clusterData from "../../data/clusters.json";
@@ -38,6 +39,7 @@ const clusterBankMap: Record<string, string> = {
   cluster3: "purple",
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
   const [clusters, setClusters] = useState<ClusterPoint[]>([]);
   const [clusterCenters, setClusterCenters] = useState<Record<string, ClusterCenter>>({});
@@ -47,7 +49,7 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
   const imageRefs = useRef<Record<string, HTMLImageElement | null>>({});
   const containerRef = useRef<HTMLDivElement>(null);
 
- useEffect(() => {
+  useEffect(() => {
     const parsed: ClusterPoint[] = [];
     const allX: number[] = [], allY: number[] = [];
     const PADDING = 0.15;
@@ -123,41 +125,6 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
         backgroundSize: "calc(100% / 20) calc(100% / 20)",
       }}
     >
-      {!mini && (
-        <motion.div
-          drag
-          dragConstraints={{ top: 0, left: 0, right: 1000, bottom: 800 }}
-          dragElastic={0.2}
-          className="absolute top-6 left-6 bg-white text-black shadow-xl p-5 rounded-xl border border-gray-200 w-72 z-50 cursor-move"
-        >
-
-          <h3 className="text-xl font-semibold mb-2">Marker Clustering</h3>
-          <p className="text-sm text-gray-600 mb-3 leading-tight">
-            This panel uses external data points and filters them dynamically.
-          </p>
-          <div className="space-y-2">
-            <select value={colorFilter} onChange={(e) => setColorFilter(e.target.value)} className="w-full p-2 border rounded-md text-sm bg-white">
-              <option>All</option>
-              <option>Red</option>
-              <option>Blue</option>
-              <option>Green</option>
-              <option>Purple</option>
-            </select>
-            <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} className="w-full p-2 border rounded-md text-sm bg-white">
-              <option>All</option>
-              <option>A</option>
-              <option>B</option>
-              <option>C</option>
-            </select>
-            <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="w-full p-2 border rounded-md text-sm bg-white">
-              <option>All</option>
-              <option>active</option>
-              <option>inactive</option>
-            </select>
-          </div>
-        </motion.div>
-      )}
-
       <div className="absolute top-0 right-0 h-full flex flex-col justify-around pr-4 space-y-2 z-40">
         {Object.entries(bankImages).map(([clusterKey, src]) => (
           <img
@@ -167,7 +134,7 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
             }}
             src={src}
             alt={clusterKey}
-            className="w-10 h-10 object-contain"
+            className="w-20 h-20 object-contain"
           />
         ))}
       </div>
@@ -202,7 +169,7 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
           return (
             <div
               key={`${clusterName}-${logoName}`}
-              className="absolute group"
+              className="absolute"
               style={{
                 top: `${center.topPercent}%`,
                 left: `${center.leftPercent}%`,
@@ -210,33 +177,11 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
                 height: `${thickness}px`,
                 transform: `rotate(${angle}deg)`,
                 transformOrigin: "left center",
+                backgroundImage: `repeating-linear-gradient(to right, ${color}, ${color} 5px, transparent 5px, transparent 10px)`,
+                backgroundSize: "200% 100%",
+                animation: `dash ${animationDuration}s linear infinite`,
               }}
-            >
-              <div
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  backgroundImage: `repeating-linear-gradient(to right, ${color}, ${color} 5px, transparent 5px, transparent 10px)`,
-                  backgroundSize: "200% 100%",
-                  animation: `dash ${animationDuration}s linear infinite`,
-                }}
-              />
-              <div
-                className="absolute opacity-0 group-hover:opacity-100 transition-opacity z-50 bg-white text-black text-xs px-3 py-1 rounded shadow border"
-                style={{
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -150%)",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {`Cluster: ${clusterName}`}
-                <br />
-                {`Banco: ${logoName}`}
-                <br />
-                {`Propor: ${(center.propor * 100).toFixed(1)}%`}
-              </div>
-            </div>
+            />
           );
         });
       })}
