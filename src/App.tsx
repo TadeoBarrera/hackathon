@@ -26,69 +26,72 @@ export default function App() {
   return (
     <main className="min-h-screen flex">
       {/* Sidebar */}
-      <aside className="w-[16vw] bg-[#1F2937] text-white shadow-md py-6 px-4 flex flex-col justify-between border-r border-[#2c3e50]">
+      <aside className="w-[16vw] bg-[#1F2937] text-white shadow-md py-6 px-4 flex flex-col gap-6 border-r border-[#2c3e50]">
+        {/* Logo */}
+        <div className="flex items-center justify-center px-2 mb-2">
+          <img
+            src={logo}
+            alt="Logo"
+            className="h-10 object-contain drop-shadow-md"
+          />
+        </div>
+
+        {/* General */}
         <div>
-          {/* Logo */}
-          <div className="flex items-center justify-center px-2 mb-8">
-           <img
-  src={logo}
-  alt="Logo"
-  className="h-10 object-contain drop-shadow-md "
-/>
+          <h3 className="text-xs uppercase text-gray-400 mb-2">General</h3>
+          <ul className="space-y-3">
+            <li className={menuItemStyle("home")} onClick={() => setSection("home")}>
+              <FaHome className="text-lg" />
+              <span>Home</span>
+            </li>
+            <li className={menuItemStyle("projection")} onClick={() => setSection("projection")}>
+              <FaChartLine className="text-lg" />
+              <span>Proyección</span>
+            </li>
+          </ul>
+        </div>
 
-          </div>
+        {/* Clustering */}
+        <div>
+          <h3 className="text-xs uppercase text-gray-400 mb-2">Clustering</h3>
+          <ul className="space-y-3">
+            <li className={menuItemStyle("cluster")} onClick={() => setSection("cluster")}>
+              <FaProjectDiagram className="text-lg" />
+              <span>Marker Clustering</span>
+            </li>
+          </ul>
+        </div>
 
-          <div className="mb-6">
-            <h3 className="text-xs uppercase text-gray-400 mb-2">General</h3>
-            <ul className="space-y-3">
-              <li className={menuItemStyle("home")} onClick={() => setSection("home")}>
-                <FaHome className="text-lg" />
-                <span>Home</span>
-              </li>
-              <li className={menuItemStyle("projection")} onClick={() => setSection("projection")}>
-                <FaChartLine className="text-lg" />
-                <span>Proyección</span>
-              </li>
-            </ul>
-          </div>
+        {/* Módulos */}
+        <div>
+          <h3 className="text-xs uppercase text-gray-400 mb-2">Módulos</h3>
+          <ul className="space-y-3">
+            <li className={menuItemStyle("inversion")} onClick={() => setSection("inversion")}>
+              <FaChartLine className="text-lg" />
+              <span>Cobranza</span>
+            </li>
+            <li className={menuItemStyle("optimo")} onClick={() => setSection("optimo")}>
+              <FaCogs className="text-lg" />
+              <span>Óptimo vs Actual</span>
+            </li>
+          </ul>
+        </div>
 
-          <div className="mb-6">
-            <h3 className="text-xs uppercase text-gray-400 mb-2">Clustering</h3>
-            <ul className="space-y-3">
-              <li className={menuItemStyle("cluster")} onClick={() => setSection("cluster")}>
-                <FaProjectDiagram className="text-lg" />
-                <span>Marker Clustering</span>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-xs uppercase text-gray-400 mb-2">Módulos</h3>
-            <ul className="space-y-3">
-              <li className={menuItemStyle("sustento")} onClick={() => setSection("sustento")}>
-                <FaMoneyBillWave className="text-lg" />
-                <span>Sustento</span>
-              </li>
-              <li className={menuItemStyle("inversion")} onClick={() => setSection("inversion")}>
-                <FaChartLine className="text-lg" />
-                <span>Cobranza</span>
-              </li>
-              <li className={menuItemStyle("optimo")} onClick={() => setSection("optimo")}>
-                <FaCogs className="text-lg" />
-                <span>Óptimo vs Actual</span>
-              </li>
-            </ul>
-          </div>
+        {/* Fundamento Analítico */}
+        <div>
+          <h3 className="text-xs uppercase text-gray-400 mb-2">Fundamento Analítico</h3>
+          <ul className="space-y-3">
+            <li className={menuItemStyle("sustento")} onClick={() => setSection("sustento")}>
+              <FaChartPie className="text-lg" />
+              <span>Sustento</span>
+            </li>
+          </ul>
         </div>
       </aside>
 
       {/* Panel principal */}
       <section
-        className={`flex-1 relative p-6 overflow-y-auto ${
-          section === "optimo"
-            ? "bg-gradient-to-br from-[#1F2937] via-[#2D3748] to-[#111827] text-white"
-            : "flex-1 relative p-6 overflow-y-auto bg-gradient-to-br from-[#1F2937] via-[#2D3748] to-[#111827] text-white"
-        }`}
+        className={`flex-1 relative p-6 overflow-y-auto bg-gradient-to-br from-[#1F2937] via-[#2D3748] to-[#111827] text-white`}
       >
         {section === "home" && <HomePanel />}
         {section === "cluster" && <ClusterPanel />}
