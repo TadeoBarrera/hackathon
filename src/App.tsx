@@ -1,4 +1,3 @@
-// App.tsx
 import { useState } from "react";
 import HomePanel from "./components/HomePanel";
 import ClusterPanel from "./components/charts/ClusterPanel";
@@ -7,6 +6,7 @@ import Propuesta from "./components/charts/Propuesta";
 import Beneficios from "./components/charts/Beneficios";
 import Inversion from "./components/charts/Inversion";
 import OptimoVsReal from "./components/charts/OptimoVsReal";
+import logo from "./assets/logo.png";
 import {
   FaHome,
   FaProjectDiagram,
@@ -19,32 +19,34 @@ import {
 export default function App() {
   const [section, setSection] = useState("home");
 
+  const menuItemStyle = (key: string) =>
+    `flex items-center space-x-3 cursor-pointer transition-colors duration-300 ${
+      section === key ? "text-[#1D99D6]" : "text-white hover:text-[#1D99D6]"
+    }`;
+
   return (
-    <main className="min-h-screen bg-white flex">
+    <main className="min-h-screen flex">
       {/* Sidebar */}
-      <aside className="w-[16vw] bg-white shadow-md py-6 px-4 flex flex-col justify-between border-r">
+      <aside className="w-[16vw] bg-[#1F2937] text-white shadow-md py-6 px-4 flex flex-col justify-between border-r border-[#2c3e50]">
         <div>
-          <div className="flex items-center space-x-3 px-2 mb-8">
-            <div className="w-8 h-8 bg-blue-500 text-white flex items-center justify-center rounded-lg font-bold text-lg">
-              P
-            </div>
-            <h1 className="text-xl font-semibold text-blue-600">Pro Sidebar</h1>
+          {/* Logo */}
+          <div className="flex items-center justify-center px-2 mb-8">
+           <img
+  src={logo}
+  alt="Logo"
+  className="h-10 object-contain drop-shadow-md "
+/>
+
           </div>
 
           <div className="mb-6">
             <h3 className="text-xs uppercase text-gray-400 mb-2">General</h3>
             <ul className="space-y-3">
-              <li
-                className="flex items-center space-x-3 text-gray-700 hover:text-blue-600 cursor-pointer"
-                onClick={() => setSection("home")}
-              >
+              <li className={menuItemStyle("home")} onClick={() => setSection("home")}>
                 <FaHome className="text-lg" />
                 <span>Home</span>
               </li>
-              <li
-                className="flex items-center space-x-3 text-gray-700 hover:text-blue-600 cursor-pointer"
-                onClick={() => setSection("projection")}
-              >
+              <li className={menuItemStyle("projection")} onClick={() => setSection("projection")}>
                 <FaChartLine className="text-lg" />
                 <span>Proyección</span>
               </li>
@@ -54,10 +56,7 @@ export default function App() {
           <div className="mb-6">
             <h3 className="text-xs uppercase text-gray-400 mb-2">Clustering</h3>
             <ul className="space-y-3">
-              <li
-                className="flex items-center space-x-3 text-gray-700 hover:text-blue-600 cursor-pointer"
-                onClick={() => setSection("cluster")}
-              >
+              <li className={menuItemStyle("cluster")} onClick={() => setSection("cluster")}>
                 <FaProjectDiagram className="text-lg" />
                 <span>Marker Clustering</span>
               </li>
@@ -67,31 +66,19 @@ export default function App() {
           <div>
             <h3 className="text-xs uppercase text-gray-400 mb-2">Módulos</h3>
             <ul className="space-y-3">
-              <li
-                className="flex items-center space-x-3 text-gray-700 hover:text-blue-600 cursor-pointer"
-                onClick={() => setSection("propuesta")}
-              >
+              <li className={menuItemStyle("propuesta")} onClick={() => setSection("propuesta")}>
                 <FaChartPie className="text-lg" />
                 <span>Propuesta</span>
               </li>
-              <li
-                className="flex items-center space-x-3 text-gray-700 hover:text-blue-600 cursor-pointer"
-                onClick={() => setSection("beneficios")}
-              >
+              <li className={menuItemStyle("beneficios")} onClick={() => setSection("beneficios")}>
                 <FaMoneyBillWave className="text-lg" />
                 <span>Beneficios</span>
               </li>
-              <li
-                className="flex items-center space-x-3 text-gray-700 hover:text-blue-600 cursor-pointer"
-                onClick={() => setSection("inversion")}
-              >
+              <li className={menuItemStyle("inversion")} onClick={() => setSection("inversion")}>
                 <FaChartLine className="text-lg" />
                 <span>Inversión</span>
               </li>
-              <li
-                className="flex items-center space-x-3 text-gray-700 hover:text-blue-600 cursor-pointer"
-                onClick={() => setSection("optimo")}
-              >
+              <li className={menuItemStyle("optimo")} onClick={() => setSection("optimo")}>
                 <FaCogs className="text-lg" />
                 <span>Óptimo vs Real</span>
               </li>
@@ -101,7 +88,13 @@ export default function App() {
       </aside>
 
       {/* Panel principal */}
-      <section className="flex-1 relative p-6 overflow-y-auto bg-gray-50">
+      <section
+        className={`flex-1 relative p-6 overflow-y-auto ${
+          section === "optimo"
+            ? "bg-gradient-to-br from-[#1F2937] via-[#2D3748] to-[#111827] text-white"
+            : "bg-gray-50 text-black"
+        }`}
+      >
         {section === "home" && <HomePanel />}
         {section === "cluster" && <ClusterPanel />}
         {section === "projection" && <RevenueProjection />}
