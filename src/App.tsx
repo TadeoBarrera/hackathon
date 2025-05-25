@@ -44,6 +44,10 @@ export default function App() {
               <FaHome className="text-lg" />
               <span>Home</span>
             </li>
+                <li className={menuItemStyle("optimo")} onClick={() => setSection("optimo")}>
+              <FaCogs className="text-lg" />
+              <span>ROI</span>
+            </li>
           </ul>
         </div>
 
@@ -65,10 +69,6 @@ export default function App() {
             <li className={menuItemStyle("inversion")} onClick={() => setSection("inversion")}>
               <FaChartLine className="text-lg" />
               <span>Cobranza</span>
-            </li>
-            <li className={menuItemStyle("optimo")} onClick={() => setSection("optimo")}>
-              <FaCogs className="text-lg" />
-              <span>Retorno de Inversión</span>
             </li>
           </ul>
         </div>
