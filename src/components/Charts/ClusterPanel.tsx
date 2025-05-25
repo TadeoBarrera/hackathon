@@ -45,6 +45,15 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
   const imageRefs = useRef<Record<string, HTMLImageElement | null>>({});
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const [tooltipData, setTooltipData] = useState<{
+    x: number;
+    y: number;
+    dy: number;
+    clusterName: string;
+    logoName: string;
+    propor: number;
+  } | null>(null);
+
   useEffect(() => {
     const parsed: ClusterPoint[] = [];
     const allX: number[] = [], allY: number[] = [];
@@ -113,6 +122,7 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
         backgroundSize: "calc(100% / 20) calc(100% / 20)",
       }}
     >
+      {/* Banco logos */}
       <div className="absolute top-0 right-0 h-full flex flex-col justify-around pr-4 space-y-2 z-40">
         {Object.entries(bankImages).map(([clusterKey, src]) => (
           <img
@@ -127,6 +137,7 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
         ))}
       </div>
 
+      {/* Líneas */}
       {Object.entries(clusterCenters).flatMap(([clusterName, center]) => {
         const color = {
           cluster0: "#dc2626",
@@ -159,13 +170,24 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
               key={`${clusterName}-${logoName}`}
               className="absolute group"
               style={{
-                top: `${center.topPercent}%`,
-                left: `${center.leftPercent}%`,
+                top: `${startY}px`,
+                left: `${startX}px`,
                 width: `${length}px`,
                 height: `${thickness}px`,
                 transform: `rotate(${angle}deg)`,
                 transformOrigin: "left center",
               }}
+              onMouseEnter={() =>
+                setTooltipData({
+                  x: startX + dx / 2,
+                  y: startY + dy / 2,
+                  dy,
+                  clusterName,
+                  logoName,
+                  propor: center.propor,
+                })
+              }
+              onMouseLeave={() => setTooltipData(null)}
             >
               <div
                 style={{
@@ -176,27 +198,29 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
                   animation: `dash ${animationDuration}s linear infinite`,
                 }}
               />
-              <div
-                className="absolute opacity-0 group-hover:opacity-100 transition-opacity z-50 bg-white text-black text-xs px-3 py-1 rounded shadow border"
-                style={{
-                  top: "-40px",
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  whiteSpace: "nowrap",
-                  transformOrigin: "center center",
-                }}
-              >
-                {`Cluster: ${clusterName}`}
-                <br />
-                {`Banco: ${logoName}`}
-                <br />
-                {`Propor: ${(center.propor * 100).toFixed(1)}%`}
-              </div>
             </div>
           );
         });
       })}
 
+      {/* Tooltip flotante */}
+      {tooltipData && (
+        <div
+          className="absolute z-50 bg-white text-black text-xs px-3 py-1 rounded shadow border transition-opacity pointer-events-none"
+          style={{
+            top: `${tooltipData.dy > 0 ? tooltipData.y - 40 : tooltipData.y + 10}px`,
+            left: `${tooltipData.x}px`,
+            transform: "translateX(-50%)",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {`Cluster: ${tooltipData.clusterName}`}<br />
+          {`Banco: ${tooltipData.logoName}`}<br />
+          {`Propor: ${(tooltipData.propor * 100).toFixed(1)}%`}
+        </div>
+      )}
+
+      {/* Puntos animados */}
       <AnimatePresence>
         {clusters.map((cluster) => (
           <motion.div
