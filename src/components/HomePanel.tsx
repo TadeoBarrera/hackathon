@@ -2,13 +2,13 @@ import { useState } from "react";
 import { Maximize2, Minimize2 } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import Beneficios from "./charts/Sustento";
+import Sustento from "./charts/Sustento";
 import Cobranza from "./charts/Cobranza";
 import OptimoVsReal from "./charts/OptimoVsReal";
 
 const availableModules = [
   { id: "optimo", label: "Óptimo vs Real", component: <OptimoVsReal mini /> },
-  { id: "beneficios", label: "Beneficios", component: <Beneficios mini /> },
+  { id: "sustento", label: "Sustento", component: <Sustento mini /> },
   { id: "cobranza_prob", label: "Cobranza - Probabilidad", component: <Cobranza mini variant="probabilidad" /> },
   { id: "cobranza_valor", label: "Cobranza - Valor Esperado", component: <Cobranza mini variant="valor" /> },
   {
@@ -75,7 +75,7 @@ export default function HomePanel() {
   const [editMode, setEditMode] = useState(false);
   const [activeModules, setActiveModules] = useState<string[]>([
     "optimo",
-    "beneficios",
+    "sustento",
     "cobranza_prob",
     "cobranza_valor",
     "matriz",
@@ -126,9 +126,9 @@ export default function HomePanel() {
         title: "Óptimo vs Real",
         text: "Comparación entre la ganancia acumulada real y la proyectada si se hubiera aplicado la estrategia óptima desde el inicio.",
       },
-      "beneficios": {
-        title: "Beneficios Identificados",
-        text: "Este módulo presenta los beneficios económicos asociados a diferentes estrategias de cobranza o gestión financiera.",
+      "Sustento": {
+        title: "Sustento Científico",
+        text: "Este módulo presenta la precisión, recall y F1-score del modelo de predicción utilizado para determinar la probabilidad de pago de los clientes.",
       },
       "cobranza_prob": {
         title: "Cobranza - Probabilidad",
