@@ -1,47 +1,78 @@
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+import diagramaImg from "../../assets/diagrama.jpg";
 
-const dummyData = [
-  { mes: "Ene", base: 12000, ajustada: 15000 },
-  { mes: "Feb", base: 14500, ajustada: 17200 },
-  { mes: "Mar", base: 9800, ajustada: 11800 },
-  { mes: "Abr", base: 16300, ajustada: 19100 },
-  { mes: "May", base: 13400, ajustada: 16200 },
-];
+export default function Sustento({ mini = false }: { mini?: boolean }) {
+  const Table = () => (
+    <div className="h-[90%] overflow-x-auto rounded-lg ">
+      <table className="min-w-full text-xs text-white text-center">
+        <thead>
+          <tr className="border-b border-[#1D99D6]">
+            <th className="px-2 py-1">Clase</th>
+            <th className="px-2 py-1">Precisión</th>
+            <th className="px-2 py-1">Recall</th>
+            <th className="px-2 py-1">F1-score</th>
+            <th className="px-2 py-1">Soporte</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="py-1">No Pagado</td>
+            <td>0.97</td>
+            <td>1.00</td>
+            <td>0.99</td>
+            <td>3234</td>
+          </tr>
+          <tr>
+            <td className="py-1">Pagado</td>
+            <td>1.00</td>
+            <td>0.96</td>
+            <td>0.98</td>
+            <td>2085</td>
+          </tr>
+          <tr className="border-t border-[#1D99D6]">
+            <td className="py-1 font-semibold">Accuracy</td>
+            <td colSpan={4}>0.98 (5319 muestras)</td>
+          </tr>
+          <tr>
+            <td className="py-1">Macro Promedio</td>
+            <td>0.99</td>
+            <td>0.98</td>
+            <td>0.98</td>
+            <td>5319</td>
+          </tr>
+          <tr>
+            <td className="py-1">Weighted Promedio</td>
+            <td>0.98</td>
+            <td>0.98</td>
+            <td>0.98</td>
+            <td>5319</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
 
-export default function Beneficios({
-  data = dummyData,
-  mini = false,
-}: {
-  data?: typeof dummyData;
-  mini?: boolean;
-}) {
+if (mini) {
   return (
-    <div className="w-full h-full">
-      {!mini && (
-        <h2 className="text-sm font-semibold text-gray-700 mb-2">
-          Comparativo de Beneficios
-        </h2>
-      )}
-      <ResponsiveContainer width="100%" height={mini ? 160 : 240}>
-        <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="mes" />
-          <YAxis />
-          <Tooltip formatter={(value: number) => `$${value.toLocaleString()}`} />
-          {!mini && <Legend />}
-          <Bar dataKey="base" fill="#60a5fa" name="Ganancia Base" />
-          <Bar dataKey="ajustada" fill="#10b981" name="Ganancia Ajustada" />
-        </BarChart>
-      </ResponsiveContainer>
+      <Table />
+  );
+}
+
+
+  return (
+    <div className="w-full h-full flex flex-col gap-4 bg-gradient-to-br from-[#15243D] via-[#0E4385] to-[#111827] text-white p-6 rounded-xl shadow-lg">
+      <h2 className="text-3xl font-extrabold text-white text-center">Sustento del Modelo</h2>
+
+      <Table />
+
+      <img
+        src={diagramaImg}
+        alt="Diagrama del modelo"
+        className="max-w-md mx-auto mt-4 rounded shadow-lg"
+      />
+
+      <p className="text-xs text-gray-300 text-center italic mt-2">
+        El modelo usa una arquitectura basada en atención para analizar secuencias de intentos de cobro.
+      </p>
     </div>
   );
 }
