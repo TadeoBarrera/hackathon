@@ -2,14 +2,14 @@ import { useState } from "react";
 import { Maximize2, Minimize2 } from "lucide-react";
 import Propuesta from "./charts/Propuesta";
 import Beneficios from "./charts/Beneficios";
-import Inversion from "./charts/Inversion";
+import Cobranza from "./charts/Cobranza";
 import OptimoVsReal from "./charts/OptimoVsReal";
 
 const availableModules = [
   { id: "optimo", label: "Óptimo vs Real", component: <OptimoVsReal mini /> },
   { id: "propuesta", label: "Propuesta", component: <Propuesta mini /> },
   { id: "beneficios", label: "Beneficios", component: <Beneficios mini /> },
-  { id: "inversion", label: "Inversión", component: <Inversion mini /> },
+  { id: "cobranza", label: "Cobranza", component: <Cobranza mini /> },
 ];
 
 export default function HomePanel() {
@@ -19,7 +19,7 @@ export default function HomePanel() {
     "propuesta",
     "cluster",
     "beneficios",
-    "inversion",
+    "cobranza",
   ]);
 
   const [wideModules, setWideModules] = useState<string[]>([]);
