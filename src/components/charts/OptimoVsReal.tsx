@@ -30,23 +30,92 @@ export default function OptimoVsReal({ mini = false }: { mini?: boolean }) {
     setData(parsedData);
   }, []);
 
-  if (mini) {
-    return (
-      <ResponsiveContainer width="100%" height={160}>
-        <LineChart data={data}>
-          <Line type="monotone" dataKey="real" stroke="#0E4385" dot={false} strokeWidth={2} />
+if (mini) {
+  // Tooltip personalizado para mostrar ambos valores
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-[#1F2937] text-white text-xs p-2 rounded shadow-md">
+          <p className="font-bold mb-1">{label}</p>
+          {payload.map((entry: any, index: number) => (
+            <p key={`item-${index}`} className="flex items-center space-x-1">
+              <span
+                className="inline-block w-2 h-2 rounded-full"
+                style={{ backgroundColor: entry.color }}
+              />
+              <span>
+                {entry.name}:{" "}
+                {entry.value >= 1e9
+                  ? `$${(entry.value / 1e9).toFixed(0)}B`
+                  : entry.value >= 1e6
+                  ? `$${(entry.value / 1e6).toFixed(0)}M`
+                  : entry.value >= 1e3
+                  ? `$${(entry.value / 1e3).toFixed(0)}K`
+                  : `$${entry.value.toFixed(0)}`}
+              </span>
+            </p>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+
+  return (
+    <div className="w-full h-full relative">
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart
+          data={data}
+          margin={{ top: 10, right: 10, bottom: 30, left: -10 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" stroke="#1D99D680" />
+          <XAxis dataKey="mes" stroke="#ffffff" tick={{ fontSize: 10 }} />
+          <YAxis
+            stroke="#ffffff"
+            tick={{ fontSize: 10 }}
+            tickFormatter={(v) => {
+              if (v >= 1e9) return `$${(v / 1e9).toFixed(0)}B`;
+              if (v >= 1e6) return `$${(v / 1e6).toFixed(0)}M`;
+              if (v >= 1e3) return `$${(v / 1e3).toFixed(0)}K`;
+              return `$${v.toFixed(0)}`;
+            }}
+          />
+          <Tooltip content={<CustomTooltip />} />
+          <Line
+            type="monotone"
+            dataKey="real"
+            stroke="#0E4385"
+            dot={true}
+            strokeWidth={2}
+            name="Ganancia Real"
+          />
           <Line
             type="monotone"
             dataKey="optimo"
             stroke="#1D99D6"
-            dot={false}
+            dot={true}
             strokeDasharray="4 2"
             strokeWidth={2}
+            name="Ganancia Óptima"
           />
         </LineChart>
       </ResponsiveContainer>
-    );
-  }
+
+      {/* Leyenda dentro de la gráfica en esquina inferior derecha */}
+      <div className="absolute bottom-4 right-6 flex space-x-3 text-xs rounded px-2 py-1 text-white">
+        <div className="flex items-center space-x-1">
+          <span className="w-2 h-2 rounded-full bg-[#0E4385] inline-block" />
+          <span>Ganancia Real</span>
+        </div>
+        <div className="flex items-center space-x-1">
+          <span className="w-2 h-2 rounded-full bg-[#1D99D6] inline-block border-dashed border-2 border-[#1D99D6]" />
+          <span>Ganancia Óptima</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
   const totalReal = data.reduce((sum, d) => sum + d.real, 0);
   const totalOptimo = data.reduce((sum, d) => sum + d.optimo, 0);
@@ -77,7 +146,7 @@ export default function OptimoVsReal({ mini = false }: { mini?: boolean }) {
       </div>
 
       {/* Chart */}
-      <div className="w-full mt-8 h-[300px] bg-[#15243D] p-4 rounded-lg">
+      <div className="w-full mt-8 h-[300px] p-4 rounded-lg">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#1D99D680" />
@@ -87,7 +156,7 @@ export default function OptimoVsReal({ mini = false }: { mini?: boolean }) {
               tickFormatter={formatCurrency}
             />
             <Tooltip
-              contentStyle={{ backgroundColor: "#1D99D6", border: "none", color: "white" }}
+              contentStyle={{ backgroundColor: "#1F2937", border: "none", color: "white" }}
               formatter={(v: number) => formatCurrency(v)}
             />
             <Legend />

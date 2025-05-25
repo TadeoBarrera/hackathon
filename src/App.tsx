@@ -92,7 +92,7 @@ export default function App() {
         className={`flex-1 relative p-6 overflow-y-auto ${
           section === "optimo"
             ? "bg-gradient-to-br from-[#1F2937] via-[#2D3748] to-[#111827] text-white"
-            : "bg-gray-50 text-black"
+            : "bg-gradient-to-br from-[#1F2937] via-[#2D3748] "
         }`}
       >
         {section === "home" && <HomePanel />}
