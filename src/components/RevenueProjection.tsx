@@ -9,10 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-// Procesamos los datos para calcular la diferencia optimizado - original
 const differences = rawData.map((entry: any) => +(entry.optimizado - entry.original).toFixed(2));
-
-// Agrupamos en 5 meses: Enero a Mayo
 const monthLabels = ["Enero", "Febrero", "Marzo", "Abril", "Mayo"];
 const chunkSize = Math.ceil(differences.length / monthLabels.length);
 
@@ -25,7 +22,6 @@ const monthlyDiff = monthLabels.map((month, i) => {
   };
 });
 
-// Tooltip personalizado sin tipos externos
 const CustomTooltip = ({
   active,
   payload,
@@ -51,17 +47,18 @@ const CustomTooltip = ({
 
 export default function RevenueProjection() {
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4 text-blue-700">Proyección de Beneficios</h2>
+    <div className="p-6 bg-gradient-to-br from-[#15243D] via-[#0E4385] to-[#111827] text-white rounded-xl shadow-lg">
+      <h2 className="text-2xl font-extrabold text-white mb-4">Proyección de Beneficios</h2>
 
       <div className="mb-6">
         <h3 className="text-lg font-semibold mb-2">Gráfica de crecimiento</h3>
-        <div className="w-full h-64 bg-white border rounded">
+        <div className="w-full h-64 bg-[#1F2937] border border-[#1D99D6]/30 rounded">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={monthlyDiff} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#1D99D680" />
+              <XAxis dataKey="month" stroke="#D1D5DB" />
               <YAxis
+                stroke="#D1D5DB"
                 tickFormatter={(value) =>
                   `$${value.toLocaleString(undefined, { maximumFractionDigits: 0 })}`
                 }
@@ -73,24 +70,26 @@ export default function RevenueProjection() {
         </div>
       </div>
 
-      <table className="w-full border rounded-md mt-4">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="text-left p-2 border">Mes</th>
-            <th className="text-left p-2 border">Beneficio Promedio</th>
-          </tr>
-        </thead>
-        <tbody>
-          {monthlyDiff.map((row, index) => (
-            <tr key={index} className="hover:bg-gray-50">
-              <td className="p-2 border">{row.month}</td>
-              <td className="p-2 border">
-                ${row.difference.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-              </td>
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-[#1F2937] text-white text-sm rounded-md border border-[#1D99D6]/30 shadow-inner">
+          <thead className="bg-[#0E4385] text-left uppercase text-xs text-white tracking-wider">
+            <tr>
+              <th className="px-4 py-3">Mes</th>
+              <th className="px-4 py-3">Beneficio Promedio</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {monthlyDiff.map((row, index) => (
+              <tr key={index} className="border-t border-[#1D99D6]/20 hover:bg-[#2C3E50]">
+                <td className="px-4 py-2">{row.month}</td>
+                <td className="px-4 py-2">
+                  ${row.difference.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
