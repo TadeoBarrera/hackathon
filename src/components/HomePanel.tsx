@@ -53,7 +53,7 @@ const availableKpis = [
     component: (
       <div className="flex flex-col items-center">
 <span className="text-sm text-[#D1D5DB]">Ganancia potencial adicional</span>
-        <span className="text-2xl font-bold text-[#1D99D6] mt-1">$25,000,000</span>
+        <span className="text-2xl font-bold text-[#1D99D6] mt-1">$1,685,099.95</span>
       </div>
     ),
   },
