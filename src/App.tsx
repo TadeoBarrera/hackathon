@@ -2,7 +2,6 @@ import { useState } from "react";
 import HomePanel from "./components/HomePanel";
 import ClusterPanel from "./components/charts/ClusterPanel";
 import RevenueProjection from "./components/RevenueProjection";
-import Propuesta from "./components/charts/Propuesta";
 import Beneficios from "./components/charts/Beneficios";
 import Inversion from "./components/charts/Cobranza";
 import OptimoVsReal from "./components/charts/OptimoVsReal";
@@ -66,10 +65,6 @@ export default function App() {
           <div>
             <h3 className="text-xs uppercase text-gray-400 mb-2">Módulos</h3>
             <ul className="space-y-3">
-              <li className={menuItemStyle("propuesta")} onClick={() => setSection("propuesta")}>
-                <FaChartPie className="text-lg" />
-                <span>Propuesta</span>
-              </li>
               <li className={menuItemStyle("beneficios")} onClick={() => setSection("beneficios")}>
                 <FaMoneyBillWave className="text-lg" />
                 <span>Beneficios</span>
@@ -98,7 +93,6 @@ export default function App() {
         {section === "home" && <HomePanel />}
         {section === "cluster" && <ClusterPanel />}
         {section === "projection" && <RevenueProjection />}
-        {section === "propuesta" && <Propuesta />}
         {section === "beneficios" && <Beneficios />}
         {section === "inversion" && <Inversion />}
         {section === "optimo" && <OptimoVsReal />}
