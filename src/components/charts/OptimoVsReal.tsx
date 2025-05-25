@@ -9,7 +9,7 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
-import jsonData from "../../data/PRUEBA.json";
+import jsonData from "../../data/OptimoVsReal.json";
 
 const months = ["Ene", "Feb", "Mar", "Abr", "May"];
 
