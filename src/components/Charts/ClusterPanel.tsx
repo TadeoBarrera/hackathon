@@ -2,35 +2,58 @@ import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import clusterData from "../../data/clusters.json";
 
-const bankImages = {
+interface ClusterPoint {
+  id: string;
+  cluster: string;
+  value: number;
+  color: string;
+  type: string;
+  status: string;
+  topPercent: number;
+  leftPercent: number;
+  propor: number;
+}
+
+interface ClusterCenter {
+  leftPercent: number;
+  topPercent: number;
+  propor: number;
+}
+
+interface ClusterPanelProps {
+  mini?: boolean;
+}
+
+const bankImages: Record<string, string> = {
   cluster0: "/src/assets/banamex.png",
   cluster1: "/src/assets/banorte.png",
   cluster2: "/src/assets/bbva.png",
   cluster3: "/src/assets/santander.png",
 };
 
-const clusterBankMap = {
+const clusterBankMap: Record<string, string> = {
   cluster0: "red",
   cluster1: "green",
   cluster2: "blue",
   cluster3: "purple",
 };
 
-export default function ClusterPanel({ mini = false }) {
-  const [clusters, setClusters] = useState([]);
-  const [clusterCenters, setClusterCenters] = useState({});
+export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
+  const [clusters, setClusters] = useState<ClusterPoint[]>([]);
+  const [clusterCenters, setClusterCenters] = useState<Record<string, ClusterCenter>>({});
   const [colorFilter, setColorFilter] = useState("All");
   const [typeFilter, setTypeFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
-  const imageRefs = useRef({});
-  const containerRef = useRef();
+  const imageRefs = useRef<Record<string, HTMLImageElement | null>>({});
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const parsed = [];
-    const allX = [], allY = [];
+ useEffect(() => {
+    const parsed: ClusterPoint[] = [];
+    const allX: number[] = [], allY: number[] = [];
     const PADDING = 0.15;
 
-    Object.values(clusterData).forEach((cluster) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Object.values(clusterData).forEach((cluster: any) => {
       allX.push(...cluster.x);
       allY.push(...cluster.y);
     });
@@ -40,10 +63,10 @@ export default function ClusterPanel({ mini = false }) {
     const minY = Math.min(...allY);
     const maxY = Math.max(...allY);
 
-    const scale = (val, min, max) =>
+    const scale = (val: number, min: number, max: number) =>
       ((val - min) / (max - min)) * (1 - 2 * PADDING) + PADDING;
 
-    const centers = {};
+    const centers: Record<string, ClusterCenter> = {};
 
     Object.entries(clusterData).forEach(([clusterName, data]) => {
       const xValues = data.x.map((x) => scale(x, minX, maxX));
@@ -105,8 +128,9 @@ export default function ClusterPanel({ mini = false }) {
           drag
           dragConstraints={{ top: 0, left: 0, right: 1000, bottom: 800 }}
           dragElastic={0.2}
-          className="absolute top-6 left-6 bg-white shadow-xl p-5 rounded-xl border border-gray-200 w-72 z-50 cursor-move"
+          className="absolute top-6 left-6 bg-white text-black shadow-xl p-5 rounded-xl border border-gray-200 w-72 z-50 cursor-move"
         >
+
           <h3 className="text-xl font-semibold mb-2">Marker Clustering</h3>
           <p className="text-sm text-gray-600 mb-3 leading-tight">
             This panel uses external data points and filters them dynamically.
@@ -138,7 +162,9 @@ export default function ClusterPanel({ mini = false }) {
         {Object.entries(bankImages).map(([clusterKey, src]) => (
           <img
             key={clusterKey}
-            ref={(el) => (imageRefs.current[clusterKey] = el)}
+            ref={(el) => {
+              imageRefs.current[clusterKey] = el;
+            }}
             src={src}
             alt={clusterKey}
             className="w-10 h-10 object-contain"
