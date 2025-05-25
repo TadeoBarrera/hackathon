@@ -2,6 +2,20 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import clusterData from "../../data/clusters.json";
 
+const bankImages = {
+  Banamex: "/src/assets/banamex.png",
+  Banorte: "/src/assets/banorte.png",
+  BBVA: "/src/assets/bbva.png",
+  Santander: "/src/assets/santander.png",
+};
+
+const clusterBankMap = {
+  Banamex: "red",
+  Banorte: "green",
+  Santander: "purple",
+  BBVA: "blue",
+};
+
 export default function ClusterPanel({ mini = false }) {
   const [clusters, setClusters] = useState([]);
   const [colorFilter, setColorFilter] = useState("All");
@@ -11,7 +25,7 @@ export default function ClusterPanel({ mini = false }) {
   useEffect(() => {
     const parsed = [];
     const allX = [], allY = [];
-    const PADDING = 0.05;
+    const PADDING = 0.15;
 
     Object.values(clusterData).forEach((cluster) => {
       allX.push(...cluster.x);
@@ -38,11 +52,12 @@ export default function ClusterPanel({ mini = false }) {
           id: `${clusterName}-${i}`,
           cluster: clusterName,
           value: +(propor * 100).toFixed(1),
-          color: ["red", "blue", "green", "purple"][clusterIdx % 4],
+          color: clusterBankMap[clusterName] ?? "gray",
           type: ["A", "B", "C"][i % 3],
           status: i % 2 === 0 ? "active" : "inactive",
-          top: `calc(${(1 - normY) * 100}% - 30px)`,
-          left: `calc(${normX * 100}% - 30px)`,
+          top: `calc(${(1 - normY) * 100}% - 6px)`,
+          left: `calc(${normX * 100}% - 6px)`,
+          propor,
         });
       });
     });
@@ -66,7 +81,6 @@ export default function ClusterPanel({ mini = false }) {
         backgroundSize: "calc(100% / 20) calc(100% / 20)",
       }}
     >
-      {/* Floating panel */}
       {!mini && (
         <motion.div
           drag
@@ -80,34 +94,20 @@ export default function ClusterPanel({ mini = false }) {
           </p>
 
           <div className="space-y-2">
-            <select
-              value={colorFilter}
-              onChange={(e) => setColorFilter(e.target.value)}
-              className="w-full p-2 border rounded-md text-sm bg-white"
-            >
+            <select value={colorFilter} onChange={(e) => setColorFilter(e.target.value)} className="w-full p-2 border rounded-md text-sm bg-white">
               <option>All</option>
               <option>Red</option>
               <option>Blue</option>
               <option>Green</option>
               <option>Purple</option>
             </select>
-
-            <select
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value)}
-              className="w-full p-2 border rounded-md text-sm bg-white"
-            >
+            <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} className="w-full p-2 border rounded-md text-sm bg-white">
               <option>All</option>
               <option>A</option>
               <option>B</option>
               <option>C</option>
             </select>
-
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full p-2 border rounded-md text-sm bg-white"
-            >
+            <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="w-full p-2 border rounded-md text-sm bg-white">
               <option>All</option>
               <option>active</option>
               <option>inactive</option>
@@ -116,7 +116,12 @@ export default function ClusterPanel({ mini = false }) {
         </motion.div>
       )}
 
-      {/* Cluster markers */}
+      <div className="absolute top-0 right-0 h-full flex flex-col justify-around pr-4 space-y-2 z-40">
+        {Object.entries(bankImages).map(([name, src]) => (
+          <img key={name} src={src} alt={name} className="w-10 h-10 object-contain" />
+        ))}
+      </div>
+
       <AnimatePresence>
         {filteredClusters.map((cluster) => {
           const baseColor = {
@@ -124,6 +129,7 @@ export default function ClusterPanel({ mini = false }) {
             blue: "#1d4ed8",
             green: "#059669",
             purple: "#7c3aed",
+            gray: "#6b7280",
           }[cluster.color];
 
           const ring1 = {
@@ -131,6 +137,7 @@ export default function ClusterPanel({ mini = false }) {
             blue: "#3b82f6",
             green: "#34d399",
             purple: "#c084fc",
+            gray: "#d1d5db",
           }[cluster.color];
 
           const ring2 = {
@@ -138,6 +145,7 @@ export default function ClusterPanel({ mini = false }) {
             blue: "#93c5fd",
             green: "#6ee7b7",
             purple: "#d8b4fe",
+            gray: "#e5e7eb",
           }[cluster.color];
 
           const ring3 = {
@@ -145,7 +153,11 @@ export default function ClusterPanel({ mini = false }) {
             blue: "#dbeafe",
             green: "#bbf7d0",
             purple: "#ede9fe",
+            gray: "#f3f4f6",
           }[cluster.color];
+
+          const lineWidth = `${2 + cluster.propor * 4}px`;
+          const lineAnim = `${0.5 + (1 - cluster.propor) * 1.5}s`;
 
           return (
             <motion.div
@@ -158,19 +170,28 @@ export default function ClusterPanel({ mini = false }) {
               style={{
                 top: cluster.top,
                 left: cluster.left,
-                width: "60px",
-                height: "60px",
+                width: "12px",
+                height: "12px",
               }}
             >
-              {/* Animated halos */}
+              <motion.div
+                className="absolute bg-transparent z-0"
+                style={{
+                  height: "1px",
+                  width: "calc(100vw - 70px)",
+                  borderTop: `${lineWidth} dotted ${baseColor}`,
+                  animation: `dash ${lineAnim} linear infinite`,
+                }}
+              />
+
               <div className="absolute w-full h-full flex items-center justify-center z-0 pointer-events-none">
                 {[ring3, ring2, ring1].map((ring, idx) => (
                   <motion.div
                     key={idx}
                     className="absolute rounded-full"
                     style={{
-                      width: `${60 - idx * 20}px`,
-                      height: `${60 - idx * 20}px`,
+                      width: `${12 - idx * 4}px`,
+                      height: `${12 - idx * 4}px`,
                       backgroundColor: ring,
                       opacity: 0.4 + idx * 0.1,
                     }}
@@ -185,20 +206,27 @@ export default function ClusterPanel({ mini = false }) {
                 ))}
               </div>
 
-              {/* Main cluster */}
               <div
-                className="relative z-10 flex items-center justify-center text-white text-sm font-bold w-10 h-10 rounded-full shadow-lg"
+                className="relative z-10 rounded-full shadow-sm"
                 style={{
+                  width: "6px",
+                  height: "6px",
                   backgroundColor: baseColor,
-                  border: `2px solid ${ring2}`,
+                  border: `1px solid ${ring2}`,
                 }}
-              >
-                {cluster.value}
-              </div>
+              />
             </motion.div>
           );
         })}
       </AnimatePresence>
+
+      <style>{`
+        @keyframes dash {
+          to {
+            background-position: 100% 0;
+          }
+        }
+      `}</style>
     </div>
   );
 }
