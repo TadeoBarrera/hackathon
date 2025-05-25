@@ -184,7 +184,7 @@ const delta = lastEntry ? lastEntry.optimo - lastEntry.real : 0;
       </div>
       {/* Insights & Actions */}
       <div className="bg-[#15243D] p-5 rounded-lg shadow-lg border-l-4 border-[#1D99D6]">
-        <h3 className="text-sm font-semibold text-white mb-2">Oportunidades de Mejora</h3>
+        <h3 className="text-sm font-semibold text-white mb-2">Observaciones</h3>
         <ul className="list-disc text-sm text-gray-300 pl-5 space-y-1">
           <li>Se detectaron desviaciones en marzo y abril respecto al rendimiento óptimo.</li>
           <li>Asignación incorrecta de estrategia en clientes con perfil alto.</li>
