@@ -774,7 +774,6 @@
   .uppercase {
     text-transform: uppercase;
   }
-
   .italic {
     font-style: italic;
   }
@@ -842,13 +841,6 @@
   .duration-300 {
     --tw-duration: 300ms;
     transition-duration: 300ms;
-  }
-  .group-hover\:flex {
-    &:is(:where(.group):hover *) {
-      @media (hover: hover) {
-        display: flex;
-      }
-    }
   }
   .group-hover\:opacity-100 {
     &:is(:where(.group):hover *) {

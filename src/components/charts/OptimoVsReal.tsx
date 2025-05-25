@@ -23,8 +23,8 @@ export default function OptimoVsReal({ mini = false }: { mini?: boolean }) {
       const start = Math.floor(i * perMonth);
       const end = Math.floor((i + 1) * perMonth);
       const slice = jsonData.slice(start, end);
-      const real = slice.reduce((sum, d) => sum + d.montoAcumulado, 0);
-      const optimo = slice.reduce((sum, d) => sum + d.montoAcumulado2, 0);
+      const real = slice.reduce((sum, d) =>  d.original, 0);
+      const optimo = slice.reduce((sum, d) => d.optimizado, 0);
       return { mes, real, optimo };
     });
     setData(parsedData);
@@ -117,9 +117,9 @@ if (mini) {
 }
 
 
-  const totalReal = data.reduce((sum, d) => sum + d.real, 0);
-  const totalOptimo = data.reduce((sum, d) => sum + d.optimo, 0);
-  const delta = totalOptimo - totalReal;
+const lastEntry = data[data.length - 1];
+const delta = lastEntry ? lastEntry.optimo - lastEntry.real : 0;
+
 
   // ✅ Función para formatear montos de forma legible
   const formatCurrency = (v: number) => {
