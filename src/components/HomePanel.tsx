@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Maximize2, Minimize2 } from "lucide-react";
 import Propuesta from "./charts/Propuesta";
-import ClusterPanel from "./charts/ClusterPanel";
 import Beneficios from "./charts/Beneficios";
 import Inversion from "./charts/Inversion";
 import OptimoVsReal from "./charts/OptimoVsReal";
@@ -9,7 +8,6 @@ import OptimoVsReal from "./charts/OptimoVsReal";
 const availableModules = [
   { id: "optimo", label: "Óptimo vs Real", component: <OptimoVsReal mini /> },
   { id: "propuesta", label: "Propuesta", component: <Propuesta mini /> },
-  { id: "cluster", label: "Cluster", component: <ClusterPanel mini count={12} /> },
   { id: "beneficios", label: "Beneficios", component: <Beneficios mini /> },
   { id: "inversion", label: "Inversión", component: <Inversion mini /> },
 ];
@@ -41,10 +39,10 @@ export default function HomePanel() {
   return (
     <div className="w-full p-6 bg-gradient-to-br from-[#15243D] via-[#0E4385] to-[#111827] text-white min-h-screen">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-white">Resumen General</h1>
+        <h1 className="text-3xl font-extrabold text-white text-center">Resumen General</h1>
         <button
           onClick={() => setEditMode(!editMode)}
-          className="text-xs bg-[#0E4385] hover:bg-[#1D99D6] text-white px-4 py-1 rounded shadow"
+          className="text-xs bg-[#1F2937] hover:bg-[#1D99D6] text-white px-4 py-1 rounded shadow"
         >
           {editMode ? "Finalizar edición" : "Editar tablero"}
         </button>
