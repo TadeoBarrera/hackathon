@@ -73,11 +73,13 @@ if (mini) {
           <YAxis
             stroke="#ffffff"
             tick={{ fontSize: 10 }}
+            domain={['dataMin - 1000000', 'dataMax + 1000000']}
             tickFormatter={(v) => {
               if (v >= 1e9) return `$${(v / 1e9).toFixed(0)}B`;
               if (v >= 1e6) return `$${(v / 1e6).toFixed(0)}M`;
               if (v >= 1e3) return `$${(v / 1e3).toFixed(0)}K`;
               return `$${v.toFixed(0)}`;
+
             }}
           />
           <Tooltip content={<CustomTooltip />} />
@@ -151,6 +153,8 @@ const delta = lastEntry ? lastEntry.optimo - lastEntry.real : 0;
             <YAxis
               stroke="#ffffff"
               tickFormatter={formatCurrency}
+              domain={['dataMin - 1000000', 'dataMax + 1000000']}
+
             />
             <Tooltip
               contentStyle={{ backgroundColor: "#1F2937", border: "none", color: "white" }}
@@ -181,22 +185,51 @@ const delta = lastEntry ? lastEntry.optimo - lastEntry.real : 0;
         <span className="text-[#1D99D6] font-semibold text-2xl">
 {delta.toLocaleString()}
         </span>
+{/* Tabla horizontal de porcentajes por mes */}
+<div className="overflow-x-auto rounded-lg shadow-md bg-[#15243D] p-4 mt-6">
+  <h3 className="text-sm font-semibold text-white mb-2">Beneficio Acumulado Mensual</h3>
+  <table className="w-full text-sm text-center text-gray-300">
+    <thead className="text-xs uppercase text-gray-400 border-b border-[#1D99D6]">
+      <tr>
+        <th className="px-4 py-2">Mes</th>
+        <th className="px-4 py-2">Enero</th>
+        <th className="px-4 py-2">Febrero</th>
+        <th className="px-4 py-2">Marzo</th>
+        <th className="px-4 py-2">Abril</th>
+        <th className="px-4 py-2">Mayo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr className="border-t border-gray-600">
+        <td className="px-4 py-2 font-semibold text-gray-400">Beneficio</td>
+        <td className="px-4 py-2">$342,869</td>
+        <td className="px-4 py-2">$670,114</td>
+        <td className="px-4 py-2">$998,906</td>
+        <td className="px-4 py-2">$1,328,274</td>
+        <td className="px-4 py-2">$1,685,099.95</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
       </div>
       {/* Insights & Actions */}
-      <div className="bg-[#15243D] p-5 rounded-lg shadow-lg border-l-4 border-[#1D99D6]">
-        <h3 className="text-sm font-semibold text-white mb-2">Observaciones</h3>
-        <ul className="list-disc text-sm text-gray-300 pl-5 space-y-1">
-          <li>Se detectaron desviaciones en marzo y abril respecto al rendimiento óptimo.</li>
-          <li>Asignación incorrecta de estrategia en clientes con perfil alto.</li>
-          <li>Se recomienda redistribuir esfuerzos hacia instituciones bancarias de mayor recuperación.</li>
-        </ul>
-        <button
-          className="mt-3 px-5 py-2 bg-[#0E4385] hover:bg-[#1D99D6] transition-colors duration-300 text-white text-sm rounded shadow-md"
-          onClick={() => alert("Aplicando acciones recomendadas (modo demo)...")}
-        >
-          Aplicar solución recomendada
-        </button>
-      </div>
+     <div className="bg-[#15243D] p-5 rounded-lg shadow-lg border-l-4 border-[#1D99D6]">
+  <h3 className="text-sm font-semibold text-white mb-2">Observaciones</h3>
+  <ul className="list-disc text-sm text-gray-300 pl-5 space-y-1">
+    <li>Se recomienda utilizar Banco Banamex cuando el número de intentos sea menor o igual a 5 y el modelo prediga que el cliente pagará, salvo que el banco del cliente sea Santander, en cuyo caso debe usarse Santander.</li>
+    <li>Para intentos mayores a 5 con predicción positiva, o menores a 10 con predicción negativa, se sugiere usar BBVA Interbancario por eficiencia en el procesamiento.</li>
+    <li>En casos con 7 a 10 intentos y predicción negativa, Banorte es preferible si coincide con el banco del cliente; en caso contrario, se recomienda Santander.</li>
+    <li>Si el número de intentos supera los 20 con predicción positiva, o los 10 con predicción negativa, se recomienda suspender el envío de peticiones para evitar costos innecesarios.</li>
+  </ul>
+  <button
+    className="mt-3 px-5 py-2 bg-[#0E4385] hover:bg-[#1D99D6] transition-colors duration-300 text-white text-sm rounded shadow-md"
+    onClick={() => alert("Aplicando acciones recomendadas (modo demo)...")}
+  >
+    Aplicar solución recomendada
+  </button>
+</div>
+
     </div>
   );
 }
