@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import clusterData from "../../data/clusters.json";
 
 interface ClusterPoint {
@@ -18,32 +17,41 @@ interface ClusterPoint {
 interface ClusterCenter {
   leftPercent: number;
   topPercent: number;
-  propor: number;
+  ponderaciones: Record<string, number>;
 }
 
 interface ClusterPanelProps {
   mini?: boolean;
 }
 
-const bankImages: Record<string, string> = {
-  cluster0: "/src/assets/banamex.png",
-  cluster1: "/src/assets/banorte.png",
-  cluster2: "/src/assets/bbva.png",
-  cluster3: "/src/assets/santander.png",
-};
-
-const clusterBankMap: Record<string, string> = {
-  cluster0: "red",
-  cluster1: "green",
-  cluster2: "blue",
-  cluster3: "purple",
+const logoMapping: Record<string, { src: string; keys: string[]; color: string }> = {
+  banamex: {
+    src: "/src/assets/banamex.png",
+    keys: ["BANAMEX CLABE TRADICIONAL"],
+    color: "#16a34a",
+  },
+  banorte: {
+    src: "/src/assets/banorte.png",
+    keys: ["BANORTE CLABE TRADICIONAL"],
+    color: "#22d3ee",
+  },
+  bbva: {
+    src: "/src/assets/bbva.png",
+    keys: ["BBVA CLABE INTERBANCARIA"],
+    color: "#3b82f6",
+  },
+  santander: {
+    src: "/src/assets/santander.png",
+    keys: ["SANTANDER CLABE TRADICIONAL", "SANTANDER TRADICIONAL REINTENTO "],
+    color: "#d946ef",
+  },
 };
 
 export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
   const [clusters, setClusters] = useState<ClusterPoint[]>([]);
   const [clusterCenters, setClusterCenters] = useState<Record<string, ClusterCenter>>({});
-  const imageRefs = useRef<Record<string, HTMLImageElement | null>>({});
   const containerRef = useRef<HTMLDivElement>(null);
+  const imageRefs = useRef<Record<string, HTMLImageElement | null>>({});
 
   const [tooltipData, setTooltipData] = useState<{
     x: number;
@@ -79,31 +87,28 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
       const yValues = data.y.map((y) => scale(y, minY, maxY));
       const avgX = xValues.reduce((a, b) => a + b, 0) / xValues.length;
       const avgY = yValues.reduce((a, b) => a + b, 0) / yValues.length;
-      const meanPropor = data.propor.reduce((a, b) => a + b, 0) / data.propor.length;
-
+      
       centers[clusterName] = {
         leftPercent: avgX * 100,
         topPercent: (1 - avgY) * 100,
-        propor: meanPropor,
+        ponderaciones: data.ponderacion ?? {},
       };
 
       data.x.forEach((x, i) => {
         const y = data.y[i];
-        const propor = data.propor[i];
-
         const normX = scale(x, minX, maxX);
         const normY = scale(y, minY, maxY);
 
         parsed.push({
           id: `${clusterName}-${i}`,
           cluster: clusterName,
-          value: +(propor * 100).toFixed(1),
-          color: clusterBankMap[clusterName] ?? "gray",
+          value: 0,
+          color: ["#2563eb", "#059669", "#b91c1c", "#7c3aed"][parseInt(clusterName) % 4],
           type: ["A", "B", "C"][i % 3],
           status: i % 2 === 0 ? "active" : "inactive",
           topPercent: (1 - normY) * 100,
           leftPercent: normX * 100,
-          propor,
+          propor: 0,
         });
       });
     });
@@ -122,33 +127,26 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
         backgroundSize: "calc(100% / 20) calc(100% / 20)",
       }}
     >
-      {/* Banco logos */}
+      {/* Logos */}
       <div className="absolute top-0 right-0 h-full flex flex-col justify-around pr-4 space-y-2 z-40">
-        {Object.entries(bankImages).map(([clusterKey, src]) => (
+        {Object.entries(logoMapping).map(([key, { src }]) => (
           <img
-            key={clusterKey}
-            ref={(el) => {
-              imageRefs.current[clusterKey] = el;
-            }}
+            key={key}
+            ref={(el) => (imageRefs.current[key] = el)}
             src={src}
-            alt={clusterKey}
+            alt={key}
             className="w-20 h-20 object-contain"
           />
         ))}
       </div>
 
-      {/* Líneas */}
+      {/* Líneas punteadas con animación */}
       {Object.entries(clusterCenters).flatMap(([clusterName, center]) => {
-        const color = {
-          cluster0: "#dc2626",
-          cluster1: "#059669",
-          cluster2: "#1d4ed8",
-          cluster3: "#7c3aed",
-        }[clusterName];
+        return Object.entries(logoMapping).flatMap(([logoKey, { keys, color }]) => {
+          const ponderacionValue = keys.reduce((sum, key) => sum + (center.ponderaciones[key] ?? 0), 0);
+          if (!ponderacionValue || !imageRefs.current[logoKey] || !containerRef.current) return [];
 
-        return Object.entries(imageRefs.current).map(([logoName, logoRef]) => {
-          if (!logoRef || !containerRef.current) return null;
-
+          const logoRef = imageRefs.current[logoKey]!;
           const logoRect = logoRef.getBoundingClientRect();
           const containerRect = containerRef.current.getBoundingClientRect();
 
@@ -161,14 +159,13 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
           const dy = endY - startY;
           const length = Math.sqrt(dx * dx + dy * dy);
           const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
-
-          const thickness = 2 + Math.min(Math.max(center.propor, 0), 1) * 6;
-          const animationDuration = 3 - Math.min(Math.max(center.propor, 0), 1) * 2;
+          const thickness = 2 + Math.min(Math.max(ponderacionValue, 0), 1) * 6;
+          const animationDuration = 3 - Math.min(Math.max(ponderacionValue, 0), 1) * 2;
 
           return (
             <div
-              key={`${clusterName}-${logoName}`}
-              className="absolute group"
+              key={`${clusterName}-${logoKey}`}
+              className="absolute"
               style={{
                 top: `${startY}px`,
                 left: `${startX}px`,
@@ -183,8 +180,8 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
                   y: startY + dy / 2,
                   dy,
                   clusterName,
-                  logoName,
-                  propor: center.propor,
+                  logoName: logoKey,
+                  propor: ponderacionValue,
                 })
               }
               onMouseLeave={() => setTooltipData(null)}
@@ -203,7 +200,7 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
         });
       })}
 
-      {/* Tooltip flotante */}
+      {/* Tooltip */}
       {tooltipData && (
         <div
           className="absolute z-50 bg-white text-black text-xs px-3 py-1 rounded shadow border transition-opacity pointer-events-none"
@@ -220,56 +217,21 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
         </div>
       )}
 
-      {/* Puntos animados */}
-      <AnimatePresence>
-        {clusters.map((cluster) => (
-          <motion.div
-            key={cluster.id}
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.5 }}
-            transition={{ duration: 0.4 }}
-            className="absolute flex items-center justify-center"
-            style={{
-              top: `calc(${cluster.topPercent}% - 6px)`,
-              left: `calc(${cluster.leftPercent}% - 6px)`,
-              width: "12px",
-              height: "12px",
-            }}
-          >
-            <div className="absolute w-full h-full flex items-center justify-center z-0 pointer-events-none">
-              {["#f3f4f6", "#e5e7eb", "#d1d5db"].map((ring, idx) => (
-                <motion.div
-                  key={idx}
-                  className="absolute rounded-full"
-                  style={{
-                    width: `${12 - idx * 4}px`,
-                    height: `${12 - idx * 4}px`,
-                    backgroundColor: ring,
-                    opacity: 0.4 + idx * 0.1,
-                  }}
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    delay: idx * 0.3,
-                    ease: "easeInOut",
-                  }}
-                />
-              ))}
-            </div>
-            <div
-              className="relative z-10 rounded-full shadow-sm"
-              style={{
-                width: "6px",
-                height: "6px",
-                backgroundColor: cluster.color,
-                border: `1px solid #e5e7eb`,
-              }}
-            />
-          </motion.div>
-        ))}
-      </AnimatePresence>
+      {/* Puntos cluster con color */}
+      {clusters.map((cluster) => (
+        <div
+          key={cluster.id}
+          className="absolute rounded-full"
+          style={{
+            top: `calc(${cluster.topPercent}% - 3px)`,
+            left: `calc(${cluster.leftPercent}% - 3px)`,
+            width: "6px",
+            height: "6px",
+            backgroundColor: cluster.color,
+            border: "1px solid #e5e7eb",
+          }}
+        />
+      ))}
 
       <style>{`
         @keyframes dash {
