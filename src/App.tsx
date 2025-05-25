@@ -44,10 +44,6 @@ export default function App() {
               <FaHome className="text-lg" />
               <span>Home</span>
             </li>
-            <li className={menuItemStyle("projection")} onClick={() => setSection("projection")}>
-              <FaChartLine className="text-lg" />
-              <span>Proyección</span>
-            </li>
           </ul>
         </div>
 
@@ -72,7 +68,7 @@ export default function App() {
             </li>
             <li className={menuItemStyle("optimo")} onClick={() => setSection("optimo")}>
               <FaCogs className="text-lg" />
-              <span>Óptimo vs Actual</span>
+              <span>Retorno de Inversión</span>
             </li>
           </ul>
         </div>

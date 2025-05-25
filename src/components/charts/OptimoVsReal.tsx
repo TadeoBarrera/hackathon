@@ -136,7 +136,7 @@ const delta = lastEntry ? lastEntry.optimo - lastEntry.real : 0;
       {/* Header */}
       <div className="text-center">
         <h2 className="text-3xl font-extrabold text-white text-center">
-          Impacto de la Estrategia Óptima en la Ganancia
+          Retorno de Inversión: Óptimo vs Actual
         </h2>
   <p className="absolute left-12 mt-5 text-sm text-gray-300 text-justify ">
     Este gráfico muestra la comparación entre la ganancia acumulada real y la ganancia

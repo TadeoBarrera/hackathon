@@ -247,9 +247,6 @@
   .left-12 {
     left: calc(var(--spacing) * 12);
   }
-  .left-\[50\%\] {
-    left: 50%;
-  }
   .z-0 {
     z-index: 0;
   }
@@ -361,9 +358,6 @@
   .h-64 {
     height: calc(var(--spacing) * 64);
   }
-  .h-\[90\%\] {
-    height: 90%;
-  }
   .h-\[220px\] {
     height: 220px;
   }
@@ -378,6 +372,9 @@
   }
   .h-screen {
     height: 100vh;
+  }
+  .min-h-\[220px\] {
+    min-height: 220px;
   }
   .min-h-screen {
     min-height: 100vh;
@@ -420,6 +417,12 @@
   }
   .max-w-xl {
     max-width: var(--container-xl);
+  }
+  .min-w-\[220px\] {
+    min-width: 220px;
+  }
+  .min-w-\[300px\] {
+    min-width: 300px;
   }
   .min-w-full {
     min-width: 100%;
@@ -598,6 +601,9 @@
   .border-\[\#1D99D6\] {
     border-color: #1D99D6;
   }
+  .border-\[\#1D99D6\]\/20 {
+    border-color: color-mix(in oklab, #1D99D6 20%, transparent);
+  }
   .border-\[\#1D99D6\]\/30 {
     border-color: color-mix(in oklab, #1D99D6 30%, transparent);
   }
@@ -760,12 +766,6 @@
   .text-\[11px\] {
     font-size: 11px;
   }
-  .text-\[12px\] {
-    font-size: 12px;
-  }
-  .text-\[14px\] {
-    font-size: 14px;
-  }
   .leading-relaxed {
     --tw-leading: var(--leading-relaxed);
     line-height: var(--leading-relaxed);
@@ -914,20 +914,6 @@
     --tw-duration: 300ms;
     transition-duration: 300ms;
   }
-  .group-hover\:flex {
-    &:is(:where(.group):hover *) {
-      @media (hover: hover) {
-        display: flex;
-      }
-    }
-  }
-  .group-hover\:opacity-100 {
-    &:is(:where(.group):hover *) {
-      @media (hover: hover) {
-        opacity: 100%;
-      }
-    }
-  }
   .odd\:bg-\[\#ffffff09\] {
     &:nth-child(odd) {
       background-color: #ffffff09;
@@ -944,6 +930,13 @@
     &:hover {
       @media (hover: hover) {
         background-color: color-mix(in oklab, #1D99D6 20%, transparent);
+      }
+    }
+  }
+  .hover\:bg-\[\#2C3E50\] {
+    &:hover {
+      @media (hover: hover) {
+        background-color: #2C3E50;
       }
     }
   }
