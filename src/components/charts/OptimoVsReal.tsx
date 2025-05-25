@@ -9,7 +9,7 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
-import jsonData from "../../PRUEBA.json";
+import jsonData from "../../data/PRUEBA.json";
 
 const months = ["Ene", "Feb", "Mar", "Abr", "May"];
 
@@ -131,9 +131,6 @@ if (mini) {
 
   return (
     <div className="w-full h-full flex flex-col gap-4 bg-gradient-to-br from-[#15243D] via-[#0E4385] to-[#111827] text-white p-6 rounded-xl shadow-lg">
-
-     
-
       {/* Header */}
       <div className="text-center">
         <h2 className="text-3xl font-extrabold text-white text-center">
@@ -146,7 +143,7 @@ if (mini) {
       </div>
 
       {/* Chart */}
-      <div className="w-full mt-8 h-[300px] p-4 rounded-lg">
+      <div className="w-full mt-8 h-[300px] p-4 rounded-lg bg-[#15243D]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#1D99D680" />

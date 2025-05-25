@@ -4,7 +4,7 @@ import ClusterPanel from "./components/charts/ClusterPanel";
 import RevenueProjection from "./components/RevenueProjection";
 import Propuesta from "./components/charts/Propuesta";
 import Beneficios from "./components/charts/Beneficios";
-import Inversion from "./components/charts/Inversion";
+import Inversion from "./components/charts/Cobranza";
 import OptimoVsReal from "./components/charts/OptimoVsReal";
 import logo from "./assets/logo.png";
 import {
@@ -76,7 +76,7 @@ export default function App() {
               </li>
               <li className={menuItemStyle("inversion")} onClick={() => setSection("inversion")}>
                 <FaChartLine className="text-lg" />
-                <span>Inversión</span>
+                <span>Cobranza</span>
               </li>
               <li className={menuItemStyle("optimo")} onClick={() => setSection("optimo")}>
                 <FaCogs className="text-lg" />
@@ -92,7 +92,7 @@ export default function App() {
         className={`flex-1 relative p-6 overflow-y-auto ${
           section === "optimo"
             ? "bg-gradient-to-br from-[#1F2937] via-[#2D3748] to-[#111827] text-white"
-            : "bg-gradient-to-br from-[#1F2937] via-[#2D3748] "
+            : "flex-1 relative p-6 overflow-y-auto bg-gradient-to-br from-[#1F2937] via-[#2D3748] to-[#111827] text-white"
         }`}
       >
         {section === "home" && <HomePanel />}
