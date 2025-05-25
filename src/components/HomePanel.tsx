@@ -9,7 +9,7 @@ import OptimoVsReal from "./charts/OptimoVsReal";
 const availableModules = [
   { id: "optimo", label: "Óptimo vs Real", component: <OptimoVsReal mini /> },
   { id: "propuesta", label: "Propuesta", component: <Propuesta mini /> },
-  { id: "cluster", label: "Cluster", component: <ClusterPanel mini count={16} /> },
+  { id: "cluster", label: "Cluster", component: <ClusterPanel mini count={12} /> },
   { id: "beneficios", label: "Beneficios", component: <Beneficios mini /> },
   { id: "inversion", label: "Inversión", component: <Inversion mini /> },
 ];
