@@ -1,30 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import clusterData from "../../data/clusters.json";
 
-const generateClusters = (count: number) =>
-  Array.from({ length: count }, (_, i) => {
-    const value = Math.floor(Math.random() * 50) + 1;
-    const types = ["A", "B", "C"];
-    const statuses = ["active", "inactive"];
-    const size = value > 40 ? "large" : value > 20 ? "medium" : "small";
-
-    return {
-      id: i + 1,
-      value,
-      color: Math.random() > 0.5 ? "red" : "blue",
-      top: `${Math.random() * 85 + 5}%`,
-      left: `${Math.random() * 85 + 5}%`,
-      type: types[Math.floor(Math.random() * types.length)],
-      status: statuses[Math.floor(Math.random() * statuses.length)],
-      size,
-    };
-  });
-
-export default function ClusterPanel({ mini = false, count = 30 }) {
-  const [clusters] = useState(() => generateClusters(count));
+export default function ClusterPanel({ mini = false }) {
+  const [clusters, setClusters] = useState([]);
   const [colorFilter, setColorFilter] = useState("All");
   const [typeFilter, setTypeFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
+
+  useEffect(() => {
+    const parsed = [];
+    const allX = [], allY = [];
+    const PADDING = 0.05;
+
+    Object.values(clusterData).forEach((cluster) => {
+      allX.push(...cluster.x);
+      allY.push(...cluster.y);
+    });
+
+    const minX = Math.min(...allX);
+    const maxX = Math.max(...allX);
+    const minY = Math.min(...allY);
+    const maxY = Math.max(...allY);
+
+    const scale = (val, min, max) =>
+      (val - min) / (max - min) * (1 - 2 * PADDING) + PADDING;
+
+    Object.entries(clusterData).forEach(([clusterName, data], clusterIdx) => {
+      data.x.forEach((x, i) => {
+        const y = data.y[i];
+        const propor = data.propor[i];
+
+        const normX = scale(x, minX, maxX);
+        const normY = scale(y, minY, maxY);
+
+        parsed.push({
+          id: `${clusterName}-${i}`,
+          cluster: clusterName,
+          value: +(propor * 100).toFixed(1),
+          color: ["red", "blue", "green", "purple"][clusterIdx % 4],
+          type: ["A", "B", "C"][i % 3],
+          status: i % 2 === 0 ? "active" : "inactive",
+          top: `calc(${(1 - normY) * 100}% - 30px)`,
+          left: `calc(${normX * 100}% - 30px)`,
+        });
+      });
+    });
+
+    setClusters(parsed);
+  }, []);
 
   const filteredClusters = clusters.filter((c) => {
     const colorMatch = colorFilter === "All" || c.color === colorFilter.toLowerCase();
@@ -34,12 +58,12 @@ export default function ClusterPanel({ mini = false, count = 30 }) {
   });
 
   return (
-<div
-  className={`relative w-full overflow-hidden h-full`}
+    <div
+      className="relative w-full h-screen overflow-hidden"
       style={{
         backgroundImage:
           "linear-gradient(to right, #e5e7eb 1px, transparent 1px), linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)",
-        backgroundSize: "40px 40px",
+        backgroundSize: "calc(100% / 20) calc(100% / 20)",
       }}
     >
       {/* Floating panel */}
@@ -52,7 +76,7 @@ export default function ClusterPanel({ mini = false, count = 30 }) {
         >
           <h3 className="text-xl font-semibold mb-2">Marker Clustering</h3>
           <p className="text-sm text-gray-600 mb-3 leading-tight">
-            This panel simulates clustered data points dynamically placed on a grid layout.
+            This panel uses external data points and filters them dynamically.
           </p>
 
           <div className="space-y-2">
@@ -64,6 +88,8 @@ export default function ClusterPanel({ mini = false, count = 30 }) {
               <option>All</option>
               <option>Red</option>
               <option>Blue</option>
+              <option>Green</option>
+              <option>Purple</option>
             </select>
 
             <select
@@ -93,11 +119,33 @@ export default function ClusterPanel({ mini = false, count = 30 }) {
       {/* Cluster markers */}
       <AnimatePresence>
         {filteredClusters.map((cluster) => {
-          const isBlue = cluster.color === "blue";
-          const baseColor = isBlue ? "#1d4ed8" : "#dc2626";
-          const ring1 = isBlue ? "#3b82f6" : "#f87171";
-          const ring2 = isBlue ? "#93c5fd" : "#fca5a5";
-          const ring3 = isBlue ? "#dbeafe" : "#fecaca";
+          const baseColor = {
+            red: "#dc2626",
+            blue: "#1d4ed8",
+            green: "#059669",
+            purple: "#7c3aed",
+          }[cluster.color];
+
+          const ring1 = {
+            red: "#f87171",
+            blue: "#3b82f6",
+            green: "#34d399",
+            purple: "#c084fc",
+          }[cluster.color];
+
+          const ring2 = {
+            red: "#fca5a5",
+            blue: "#93c5fd",
+            green: "#6ee7b7",
+            purple: "#d8b4fe",
+          }[cluster.color];
+
+          const ring3 = {
+            red: "#fecaca",
+            blue: "#dbeafe",
+            green: "#bbf7d0",
+            purple: "#ede9fe",
+          }[cluster.color];
 
           return (
             <motion.div
@@ -112,7 +160,6 @@ export default function ClusterPanel({ mini = false, count = 30 }) {
                 left: cluster.left,
                 width: "60px",
                 height: "60px",
-                transform: "translate(-50%, -50%)",
               }}
             >
               {/* Animated halos */}
