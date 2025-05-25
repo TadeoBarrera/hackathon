@@ -57,18 +57,7 @@ const availableKpis = [
       </div>
     ),
   },
-  {
-    id: "kpi_boton",
-    label: "Botón Recomendaciones",
-    component: (
-      <button
-        className="bg-[#0E4385] hover:bg-[#1D99D6] text-white text-sm px-5 py-2 rounded shadow transition-colors duration-300"
-        onClick={() => alert("Mostrando recomendaciones...")}
-      >
-        Ver recomendaciones
-      </button>
-    ),
-  },
+
 ];
 
 export default function HomePanel() {
@@ -121,10 +110,6 @@ const exportDashboardToPDF = async () => {
     "kpi_ganancia": {
       title: "Indicador: Ganancia Potencial",
       text: "Este KPI refleja la diferencia entre la ganancia obtenida actualmente y la ganancia proyectada si se aplicara una estrategia óptima.",
-    },
-    "kpi_boton": {
-      title: "Recomendaciones Automatizadas",
-      text: "Este módulo sugiere acciones basadas en el análisis del modelo. Permite ejecutar recomendaciones directamente desde el panel interactivo.",
     },
     "optimo": {
       title: "Óptimo vs Real",
@@ -220,7 +205,7 @@ const exportDashboardToPDF = async () => {
       {editMode && (
         <div className="mb-6 p-4 bg-[#15243D] rounded-xl shadow border-l-4 border-[#1D99D6]">
           <h2 className="text-sm font-semibold text-white mb-2">Selecciona los módulos a mostrar</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm text-gray-300">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-3 text-sm text-gray-300">
             {[...availableModules, ...availableKpis].map((mod) => (
               <label key={mod.id} className="flex items-center space-x-2">
                 <input
@@ -238,7 +223,7 @@ const exportDashboardToPDF = async () => {
 
       {/* KPIs */}
       {visibleKpis.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           {visibleKpis.map((kpi) => (
             <div
               key={kpi.id}

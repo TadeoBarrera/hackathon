@@ -26,7 +26,7 @@ export default function App() {
   return (
     <main className="min-h-screen flex">
       {/* Sidebar */}
-      <aside className="w-[16vw] bg-[#1F2937] text-white shadow-md py-6 px-4 flex flex-col gap-6 border-r border-[#2c3e50]">
+      <aside className="w-[16vw] sticky bg-[#1F2937] text-white shadow-md py-6 px-4 flex flex-col gap-6 border-r border-[#2c3e50]">
         {/* Logo */}
         <div className="flex items-center justify-center px-2 mb-2">
           <img
