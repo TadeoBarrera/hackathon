@@ -202,6 +202,9 @@
   .relative {
     position: relative;
   }
+  .-top-8 {
+    top: calc(var(--spacing) * -8);
+  }
   .top-0 {
     top: calc(var(--spacing) * 0);
   }
@@ -231,6 +234,9 @@
   }
   .left-12 {
     left: calc(var(--spacing) * 12);
+  }
+  .left-\[50\%\] {
+    left: 50%;
   }
   .z-0 {
     z-index: 0;
@@ -342,12 +348,6 @@
   }
   .h-\[220px\] {
     height: 220px;
-  }
-  .h-\[260px\] {
-    height: 260px;
-  }
-  .h-\[270px\] {
-    height: 270px;
   }
   .h-\[280px\] {
     height: 280px;
@@ -696,6 +696,9 @@
     --tw-font-weight: var(--font-weight-semibold);
     font-weight: var(--font-weight-semibold);
   }
+  .whitespace-nowrap {
+    white-space: nowrap;
+  }
   .text-\[\#0E4385\] {
     color: #0E4385;
   }
@@ -738,7 +741,6 @@
   .uppercase {
     text-transform: uppercase;
   }
-
   .italic {
     font-style: italic;
   }
