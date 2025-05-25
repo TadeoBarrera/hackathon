@@ -364,7 +364,6 @@
   .h-\[90\%\] {
     height: 90%;
   }
-
   .h-\[220px\] {
     height: 220px;
   }
@@ -379,9 +378,6 @@
   }
   .h-screen {
     height: 100vh;
-  }
-  .min-h-\[220px\] {
-    min-height: 220px;
   }
   .min-h-screen {
     min-height: 100vh;
@@ -424,11 +420,6 @@
   }
   .max-w-xl {
     max-width: var(--container-xl);
-  .min-w-\[220px\] {
-    min-width: 220px;
-  }
-  .min-w-\[300px\] {
-    min-width: 300px;
   }
   .min-w-full {
     min-width: 100%;
@@ -937,7 +928,6 @@
       }
     }
   }
-
   .odd\:bg-\[\#ffffff09\] {
     &:nth-child(odd) {
       background-color: #ffffff09;
