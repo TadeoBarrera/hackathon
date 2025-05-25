@@ -202,19 +202,20 @@ export default function ClusterPanel({ mini = false }: ClusterPanelProps) {
 
       {/* Tooltip */}
       {tooltipData && (
-        <div
-          className="absolute z-50 bg-white text-black text-xs px-3 py-1 rounded shadow border transition-opacity pointer-events-none"
-          style={{
-            top: `${tooltipData.dy > 0 ? tooltipData.y - 40 : tooltipData.y + 10}px`,
-            left: `${tooltipData.x}px`,
-            transform: "translateX(-50%)",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {`Cluster: ${tooltipData.clusterName}`}<br />
-          {`Banco: ${tooltipData.logoName}`}<br />
-          {`Propor: ${(tooltipData.propor * 100).toFixed(1)}%`}
-        </div>
+       <div
+  className="absolute z-50 bg-white text-black text-xs px-3 py-1 rounded shadow border transition-opacity pointer-events-none"
+  style={{
+    top: `${tooltipData.dy > 0 ? tooltipData.y - 40 : tooltipData.y + 10}px`,
+    left: `${tooltipData.x}px`,
+    transform: "translateX(-50%)",
+    whiteSpace: "nowrap",
+  }}
+>
+  {`Grupo: ${tooltipData.clusterName === "cluster0" ? "No pagarán" : "Sí pagarán"}`}<br />
+  {`Banco: ${tooltipData.logoName}`}<br />
+  {`Proporción: ${(tooltipData.propor * 100).toFixed(1)}%`}
+</div>
+
       )}
 
       {/* Puntos cluster con color */}
