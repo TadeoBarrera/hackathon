@@ -2,7 +2,7 @@ import { useState } from "react";
 import HomePanel from "./components/HomePanel";
 import ClusterPanel from "./components/charts/ClusterPanel";
 import RevenueProjection from "./components/RevenueProjection";
-import Beneficios from "./components/charts/Beneficios";
+import Beneficios from "./components/charts/Sustento";
 import Inversion from "./components/charts/Cobranza";
 import OptimoVsReal from "./components/charts/OptimoVsReal";
 import logo from "./assets/logo.png";

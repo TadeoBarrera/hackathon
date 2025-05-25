@@ -421,6 +421,9 @@
   .justify-center {
     justify-content: center;
   }
+  .gap-2 {
+    gap: calc(var(--spacing) * 2);
+  }
   .gap-3 {
     gap: calc(var(--spacing) * 3);
   }
@@ -682,6 +685,9 @@
   }
   .text-\[\#1D99D6\] {
     color: #1D99D6;
+  }
+  .text-\[\#D1D5DB\] {
+    color: #D1D5DB;
   }
   .text-\[\#FFFFFF\] {
     color: #FFFFFF;
