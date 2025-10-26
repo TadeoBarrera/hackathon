@@ -1,0 +1,11 @@
+# python
+.venv/
+__pycache__/
+*.pyc
+
+# secrets
+.env
+keys/
+*.json
+*.pem
+*.p12
