@@ -7,7 +7,7 @@ const BASE_URL = (import.meta as any).env?.VITE_API_URL ?? "http://127.0.0.1:300
 
 export default function ChatPanel() {
   const [msgs, setMsgs] = useState<Msg[]>([
-    { role: "assistant", text: "Bienvenido. Escribe para dejar notas del hackatón." },
+    { role: "assistant", text: "Bienvenido. ¿Qué te gustaría saber sobre tus datos?" },
   ]);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
@@ -54,9 +54,14 @@ export default function ChatPanel() {
 
   return (
     <aside className="fixed right-0 top-0 h-screen w-[24vw] min-w-[280px] bg-[#0f172a] text-white border-l border-[#263140] flex flex-col shadow-xl z-50">
-      <header className="p-3 text-sm font-semibold bg-[#111827] border-b border-[#263140]">
-        Chat
-      </header>
+<header
+  className="h-17 bg-[#111827] border-b border-[#263140]
+             flex items-center justify-center
+             text-3xl  text-white tracking-wide"
+>
+  GateGPT!
+</header>
+
 
       <div className="flex-1 overflow-y-auto p-3 space-y-3">
         {msgs.map((m, i) => (
@@ -82,6 +87,7 @@ export default function ChatPanel() {
 
       <form onSubmit={send} className="p-3 border-t border-[#263140] flex gap-2 bg-[#0f172a]">
         <input
+          id="chat-input"
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder={loading ? "Generando…" : "Escribe un mensaje…"}

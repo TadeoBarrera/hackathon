@@ -19,7 +19,7 @@ export type WidgetInput = {
 export default function DashboardDynamic({ widgets }: { widgets: WidgetInput[] }) {
   return (
     <div className="p-4">
-      <div className="grid grid-cols-12 gap-4">
+      <div className="grid grid-flow-dense grid-cols-12 gap-4">
         {widgets.map((w) => {
           const Comp = widgetRegistry[w.type];
           const preset =
