@@ -1,101 +1,38 @@
 import { useState } from "react";
-import HomePanel from "./components/HomePanel";
-import ClusterPanel from "./components/charts/ClusterPanel";
-import RevenueProjection from "./components/RevenueProjection";
-import Sustento from "./components/charts/Sustento";
-import Inversion from "./components/charts/Cobranza";
-import OptimoVsReal from "./components/charts/OptimoVsReal";
+import DashboardLogic from "./components/logic/DashboardLogic";
+import ChatLogic from "./components/logic/ChatLogic";
 import logo from "./assets/logo.png";
-import {
-  FaHome,
-  FaProjectDiagram,
-  FaChartLine,
-  FaMoneyBillWave,
-  FaChartPie,
-  FaCogs,
-} from "react-icons/fa";
+
+const DRAWER_W = 420;
 
 export default function App() {
-  const [section, setSection] = useState("home");
-
-  const menuItemStyle = (key: string) =>
-    `flex items-center space-x-3 cursor-pointer transition-colors duration-300 ${
-      section === key ? "text-[#1D99D6]" : "text-white hover:text-[#1D99D6]"
-    }`;
+  const [open, setOpen] = useState(false);
 
   return (
-    <main className="min-h-screen flex">
-      {/* Sidebar */}
-      <aside className="w-[16vw] sticky bg-[#1F2937] text-white shadow-md py-6 px-4 flex flex-col gap-6 border-r border-[#2c3e50]">
-        {/* Logo */}
-        <div className="flex items-center justify-center px-2 mb-2">
-          <img
-            src={logo}
-            alt="Logo"
-            className="h-10 object-contain drop-shadow-md"
-          />
+    <div className="min-h-screen w-full text-white">
+      <header className={["flex items-center justify-between border-b border-white/10 bg-neutral-900 px-8 py-4", open ? `pr-[${DRAWER_W}px]` : "pr-8", "transition-all duration-300"].join(" ")}>
+        <div className="flex items-center gap-3">
+          <img src={logo} alt="Logo" className="h-6 w-auto object-contain" />
+          <span className="text-sm text-neutral-400">Demo IA • Queries dinámicas</span>
         </div>
+        <button onClick={() => setOpen(s=>!s)} className="rounded-lg border border-white/10 px-3 py-1.5 text-xs hover:bg-white/5">
+          {open ? "Cerrar chat" : "Abrir chat"}
+        </button>
+      </header>
 
-        {/* General */}
-        <div>
-          <h3 className="text-xs uppercase text-gray-400 mb-2">General</h3>
-          <ul className="space-y-3">
-            <li className={menuItemStyle("home")} onClick={() => setSection("home")}>
-              <FaHome className="text-lg" />
-              <span>Home</span>
-            </li>
-                <li className={menuItemStyle("optimo")} onClick={() => setSection("optimo")}>
-              <FaCogs className="text-lg" />
-              <span>ROI</span>
-            </li>
-          </ul>
-        </div>
+      <div className="min-h-[calc(100vh-64px)] bg-gradient-to-br from-[#15243D] via-[#0E4385] to-[#111827]">
+        <main className={["px-8 py-8 transition-all duration-300", open ? `pr-[${DRAWER_W}px]` : "pr-8"].join(" ")}>
+          <DashboardLogic />
+        </main>
+      </div>
 
-        {/* Clustering */}
-        <div>
-          <h3 className="text-xs uppercase text-gray-400 mb-2">Clustering</h3>
-          <ul className="space-y-3">
-            <li className={menuItemStyle("cluster")} onClick={() => setSection("cluster")}>
-              <FaProjectDiagram className="text-lg" />
-              <span>Marker Clustering</span>
-            </li>
-          </ul>
-        </div>
-
-        {/* Módulos */}
-        <div>
-          <h3 className="text-xs uppercase text-gray-400 mb-2">Módulos</h3>
-          <ul className="space-y-3">
-            <li className={menuItemStyle("inversion")} onClick={() => setSection("inversion")}>
-              <FaChartLine className="text-lg" />
-              <span>Cobranza</span>
-            </li>
-          </ul>
-        </div>
-
-        {/* Fundamento Analítico */}
-        <div>
-          <h3 className="text-xs uppercase text-gray-400 mb-2">Fundamento Analítico</h3>
-          <ul className="space-y-3">
-            <li className={menuItemStyle("sustento")} onClick={() => setSection("sustento")}>
-              <FaChartPie className="text-lg" />
-              <span>Sustento</span>
-            </li>
-          </ul>
-        </div>
-      </aside>
-
-      {/* Panel principal */}
-      <section
-        className={`flex-1 relative p-6 overflow-y-auto bg-gradient-to-br from-[#1F2937] via-[#2D3748] to-[#111827] text-white`}
+      {/* Drawer fuera del flujo */}
+      <aside
+        className="fixed top-0 right-0 z-50 h-screen border-l border-white/10 bg-neutral-900/95 backdrop-blur transition-transform duration-300"
+        style={{ width: DRAWER_W, transform: open ? "translateX(0)" : `translateX(${DRAWER_W}px)` }}
       >
-        {section === "home" && <HomePanel />}
-        {section === "cluster" && <ClusterPanel />}
-        {section === "projection" && <RevenueProjection />}
-        {section === "sustento" && <Sustento />}
-        {section === "inversion" && <Inversion />}
-        {section === "optimo" && <OptimoVsReal />}
-      </section>
-    </main>
+        <ChatLogic />
+      </aside>
+    </div>
   );
 }
