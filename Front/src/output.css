@@ -213,6 +213,9 @@
   .col-span-12 {
     grid-column: span 12 / span 12;
   }
+  .mr-\[24vw\] {
+    margin-right: 24vw;
+  }
   .mb-1 {
     margin-bottom: calc(var(--spacing) * 1);
   }
@@ -240,8 +243,17 @@
   .h-\[100px\] {
     height: 100px;
   }
+  .h-\[150px\] {
+    height: 150px;
+  }
+  .h-\[200px\] {
+    height: 200px;
+  }
   .h-\[350px\] {
     height: 350px;
+  }
+  .h-\[2000px\] {
+    height: 2000px;
   }
   .h-\[calc\(100\%-0\.75rem\)\] {
     height: calc(100% - 0.75rem);
@@ -299,6 +311,9 @@
   }
   .items-center {
     align-items: center;
+  }
+  .justify-between {
+    justify-content: space-between;
   }
   .justify-center {
     justify-content: center;
@@ -508,6 +523,11 @@
   .filter {
     filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
   }
+  .transition-all {
+    transition-property: all;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
   .transition-colors {
     transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
@@ -520,6 +540,13 @@
   .outline-none {
     --tw-outline-style: none;
     outline-style: none;
+  }
+  .hover\:bg-\[\#0E73A6\] {
+    &:hover {
+      @media (hover: hover) {
+        background-color: #0E73A6;
+      }
+    }
   }
   .hover\:text-\[\#1D99D6\] {
     &:hover {
@@ -541,9 +568,19 @@
       border-color: #1D99D6;
     }
   }
+  .md\:col-span-2 {
+    @media (width >= 48rem) {
+      grid-column: span 2 / span 2;
+    }
+  }
   .md\:col-span-3 {
     @media (width >= 48rem) {
       grid-column: span 3 / span 3;
+    }
+  }
+  .md\:col-span-4 {
+    @media (width >= 48rem) {
+      grid-column: span 4 / span 4;
     }
   }
   .md\:col-span-6 {
